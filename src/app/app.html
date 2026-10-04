@@ -1,0 +1,215 @@
+<mat-sidenav-container class="sidenav-container">
+
+  <!-- MENÚ LATERAL -->
+  <mat-sidenav
+    #sidenav
+    [mode]="esPantallaPequena ? 'over' : 'side'"
+    [opened]="!esPantallaPequena"
+    class="sidenav">
+
+    <h2 class="menu-title">Menú</h2>
+
+    <mat-nav-list aria-label="Navegación principal">
+
+      <!-- INICIO -->
+      <button
+        mat-list-item
+        type="button"
+        (click)="seleccionarOpcion('Inicio')"
+        [class.seleccionado]="opcionSeleccionada === 'Inicio'">
+
+        <mat-icon matListItemIcon>home</mat-icon>
+        <span matListItemTitle>Inicio</span>
+
+      </button>
+
+      <!-- PRODUCTOS -->
+      <button
+        mat-list-item
+        type="button"
+        (click)="seleccionarOpcion('Productos')"
+        [class.seleccionado]="opcionSeleccionada === 'Productos'">
+
+        <mat-icon matListItemIcon>inventory_2</mat-icon>
+        <span matListItemTitle>Productos</span>
+
+      </button>
+
+      <!-- VENTAS -->
+      <button
+        mat-list-item
+        type="button"
+        (click)="seleccionarOpcion('Ventas')"
+        [class.seleccionado]="opcionSeleccionada === 'Ventas'">
+
+        <mat-icon matListItemIcon>shopping_cart</mat-icon>
+        <span matListItemTitle>Ventas</span>
+
+      </button>
+
+      <!-- CLIENTES -->
+      <button
+        mat-list-item
+        type="button"
+        (click)="seleccionarOpcion('Clientes')"
+        [class.seleccionado]="opcionSeleccionada === 'Clientes'">
+
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matListItemTitle>Clientes</span>
+
+      </button>
+
+      <!-- PROVEEDORES -->
+      <button
+        mat-list-item
+        type="button"
+        (click)="seleccionarOpcion('Proveedores')"
+        [class.seleccionado]="opcionSeleccionada === 'Proveedores'">
+
+        <mat-icon matListItemIcon>local_shipping</mat-icon>
+        <span matListItemTitle>Proveedores</span>
+
+      </button>
+
+      <!-- FIADOS -->
+      <button
+        mat-list-item
+        type="button"
+        (click)="seleccionarOpcion('Fiados')"
+        [class.seleccionado]="opcionSeleccionada === 'Fiados'">
+
+        <mat-icon matListItemIcon>receipt_long</mat-icon>
+        <span matListItemTitle>Fiados</span>
+
+      </button>
+
+      <!-- REPORTES -->
+      <button
+        mat-list-item
+        type="button"
+        (click)="seleccionarOpcion('Reportes')"
+        [class.seleccionado]="opcionSeleccionada === 'Reportes'">
+
+        <mat-icon matListItemIcon>bar_chart</mat-icon>
+        <span matListItemTitle>Reportes</span>
+
+      </button>
+
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <mat-sidenav-content>
+
+    <!-- ENCABEZADO -->
+    <mat-toolbar>
+
+      <!-- Botón hamburguesa solo para pantallas pequeñas -->
+      @if (esPantallaPequena) {
+        <button
+          mat-icon-button
+          type="button"
+          (click)="sidenav.toggle()"
+          aria-label="Abrir o cerrar menú de navegación">
+
+          <mat-icon>menu</mat-icon>
+
+        </button>
+      }
+
+      <span>Gestión de Almacén</span>
+
+    </mat-toolbar>
+
+
+    <main class="contenido">
+
+      <!-- Cambia según la opción seleccionada -->
+      <h1>{{ opcionSeleccionada }}</h1>
+
+      <p>Bienvenido al sistema de Gestión de Almacén.</p>
+
+
+      <!-- TARJETAS DEL DASHBOARD -->
+      <div class="tarjetas">
+
+        <!-- PRODUCTOS -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Productos</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p>Datos de demostración</p>
+          </mat-card-content>
+        </mat-card>
+
+
+        <!-- VENTAS -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Ventas</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p>Datos de demostración</p>
+          </mat-card-content>
+        </mat-card>
+
+
+        <!-- CLIENTES -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Clientes</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p>Datos de demostración</p>
+          </mat-card-content>
+        </mat-card>
+
+
+        <!-- PROVEEDORES -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Proveedores</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p>Datos de demostración</p>
+          </mat-card-content>
+        </mat-card>
+
+
+        <!-- FIADOS -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Fiados</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p>Datos de demostración</p>
+          </mat-card-content>
+        </mat-card>
+
+
+        <!-- REPORTES -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Reportes</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p>Datos de demostración</p>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+
+    </main>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
