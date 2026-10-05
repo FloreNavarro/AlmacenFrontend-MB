@@ -1,0 +1,246 @@
+<!-- Contenedor General del Dashboard -->
+<div class="layout-container">
+  <!-- Encabezado Principal -->
+  <mat-toolbar color="primary" class="main-toolbar" role="banner">
+    <button
+      mat-icon-button
+      type="button"
+      (click)="toggleSidenav()"
+      class="menu-toggle-btn"
+      aria-label="Alternar menú lateral de navegación"
+      [attr.aria-expanded]="sidenavOpened()"
+      aria-controls="main-sidebar">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h1 class="toolbar-title">Gestión de Almacén</h1>
+    <span class="toolbar-spacer"></span>
+    <span class="demo-badge-header" aria-label="Aviso de modo demostración">Entorno de Demostración</span>
+  </mat-toolbar>
+
+  <!-- Contenedor de Navegación Lateral y Contenido -->
+  <mat-sidenav-container class="sidenav-container">
+    <!-- Barra Lateral Izquierda -->
+    <mat-sidenav
+      #sidenav
+      id="main-sidebar"
+      class="main-sidenav"
+      [mode]="isMobile() ? 'over' : 'side'"
+      [opened]="sidenavOpened()"
+      (closed)="onSidenavClosed()"
+      role="navigation"
+      aria-label="Menú principal de navegación">
+
+      <div class="sidenav-header">
+        <h2 class="sidenav-heading">Menú del Sistema</h2>
+      </div>
+
+      <mat-nav-list class="navigation-list">
+        @for (item of menuItems; track item.id) {
+          <button
+            mat-list-item
+            type="button"
+            class="nav-item"
+            [class.nav-item-active]="currentSection() === item.id"
+            (click)="selectSection(item.id)"
+            [attr.aria-label]="item.ariaLabel"
+            [attr.aria-current]="currentSection() === item.id ? 'page' : null">
+            <mat-icon matListItemIcon class="nav-icon">{{ item.icon }}</mat-icon>
+            <span matListItemTitle class="nav-label">{{ item.label }}</span>
+            @if (currentSection() === item.id) {
+              <span class="active-indicator" aria-hidden="true">•</span>
+            }
+          </button>
+        }
+      </mat-nav-list>
+
+      <div class="sidenav-footer">
+        <small class="footer-note">Versión demo sin backend</small>
+      </div>
+    </mat-sidenav>
+
+    <!-- Contenido Principal -->
+    <mat-sidenav-content class="main-content" role="main">
+      <div class="content-wrapper">
+
+        <!-- Banner de Bienvenida -->
+        <header class="welcome-banner">
+          <h2 class="welcome-title">Bienvenido al Panel de Gestión de Almacén</h2>
+          <p class="welcome-description">
+            Esta interfaz es un <strong>dashboard de prueba visual</strong> diseñado con Angular 21 y Angular Material.
+            Todas las tarjetas y valores a continuación son de demostración y no representan datos reales de producción ni realizan peticiones HTTP.
+          </p>
+        </header>
+
+        <!-- Vista de la Sección: Inicio -->
+        @if (currentSection() === 'inicio') {
+          <section class="dashboard-section" aria-labelledby="section-inicio-heading">
+            <h3 id="section-inicio-heading" class="visually-hidden">Métricas de Demostración</h3>
+
+            <div class="cards-grid">
+              <!-- Tarjeta 1: Productos (Demo) -->
+              <mat-card class="demo-card" appearance="outlined">
+                <mat-card-header>
+                  <mat-icon mat-card-avatar class="card-avatar avatar-products">inventory_2</mat-icon>
+                  <mat-card-title>Catálogo de Productos</mat-card-title>
+                  <mat-card-subtitle>Módulo de Inventario</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="card-body">
+                  <div class="demo-tag">[DEMOSTRACIÓN]</div>
+                  <div class="card-metric-value">128</div>
+                  <p class="card-metric-desc">Artículos simulados en stock para validación visual.</p>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <button mat-button type="button" (click)="selectSection('productos')" aria-label="Ver detalles de demostración de productos">
+                    Ver Módulo (Demo)
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+
+              <!-- Tarjeta 2: Ventas (Demo) -->
+              <mat-card class="demo-card" appearance="outlined">
+                <mat-card-header>
+                  <mat-icon mat-card-avatar class="card-avatar avatar-sales">point_of_sale</mat-icon>
+                  <mat-card-title>Registro de Ventas</mat-card-title>
+                  <mat-card-subtitle>Operaciones Comerciales</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="card-body">
+                  <div class="demo-tag">[DEMOSTRACIÓN]</div>
+                  <div class="card-metric-value">24</div>
+                  <p class="card-metric-desc">Comprobantes de prueba proyectados para esta jornada.</p>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <button mat-button type="button" (click)="selectSection('ventas')" aria-label="Ver detalles de demostración de ventas">
+                    Ver Módulo (Demo)
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+
+              <!-- Tarjeta 3: Clientes (Demo) -->
+              <mat-card class="demo-card" appearance="outlined">
+                <mat-card-header>
+                  <mat-icon mat-card-avatar class="card-avatar avatar-clients">people</mat-icon>
+                  <mat-card-title>Cartera de Clientes</mat-card-title>
+                  <mat-card-subtitle>Relaciones Comerciales</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="card-body">
+                  <div class="demo-tag">[DEMOSTRACIÓN]</div>
+                  <div class="card-metric-value">45</div>
+                  <p class="card-metric-desc">Registros de clientes de prueba previstos en el almacén.</p>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <button mat-button type="button" (click)="selectSection('clientes')" aria-label="Ver detalles de demostración de clientes">
+                    Ver Módulo (Demo)
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+
+              <!-- Tarjeta 4: Estado del Sistema (Demo) -->
+              <mat-card class="demo-card" appearance="outlined">
+                <mat-card-header>
+                  <mat-icon mat-card-avatar class="card-avatar avatar-status">check_circle</mat-icon>
+                  <mat-card-title>Estado de la Aplicación</mat-card-title>
+                  <mat-card-subtitle>Arquitectura Local</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="card-body">
+                  <div class="demo-tag">[DEMOSTRACIÓN]</div>
+                  <div class="card-status-badge">Frontend Standalone</div>
+                  <p class="card-metric-desc">Listo para integración futura con Spring Boot y MySQL 8.4.</p>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <button mat-button type="button" disabled aria-disabled="true">
+                    Sin Conexión HTTP
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+          </section>
+        }
+
+        <!-- Vista de la Sección: Productos (Demo) -->
+        @if (currentSection() === 'productos') {
+          <section class="section-detail" aria-labelledby="section-productos-heading">
+            <mat-card appearance="outlined" class="detail-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="card-avatar avatar-products">inventory_2</mat-icon>
+                <mat-card-title id="section-productos-heading">Módulo de Productos (Demostración)</mat-card-title>
+                <mat-card-subtitle>Visualización preliminar de la interfaz</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="demo-tag">[DEMOSTRACIÓN]</div>
+                <p class="detail-message">
+                  Esta pantalla corresponde a la maqueta de Productos. La lógica de consulta, altas, bajas y modificaciones
+                  se incorporará en una etapa posterior al enlazar con los controladores y servicios del backend.
+                </p>
+                <div class="demo-box">
+                  <strong>Estado:</strong> Selección activa en menú lateral: <em>Productos</em>.
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-flat-button color="primary" type="button" (click)="selectSection('inicio')">
+                  Volver al Inicio
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </section>
+        }
+
+        <!-- Vista de la Sección: Ventas (Demo) -->
+        @if (currentSection() === 'ventas') {
+          <section class="section-detail" aria-labelledby="section-ventas-heading">
+            <mat-card appearance="outlined" class="detail-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="card-avatar avatar-sales">point_of_sale</mat-icon>
+                <mat-card-title id="section-ventas-heading">Módulo de Ventas (Demostración)</mat-card-title>
+                <mat-card-subtitle>Visualización preliminar de la interfaz</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="demo-tag">[DEMOSTRACIÓN]</div>
+                <p class="detail-message">
+                  Esta pantalla corresponde a la maqueta de Ventas. La emisión de facturas y control de caja se conectará
+                  en las próximas etapas del proyecto.
+                </p>
+                <div class="demo-box">
+                  <strong>Estado:</strong> Selección activa en menú lateral: <em>Ventas</em>.
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-flat-button color="primary" type="button" (click)="selectSection('inicio')">
+                  Volver al Inicio
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </section>
+        }
+
+        <!-- Vista de la Sección: Clientes (Demo) -->
+        @if (currentSection() === 'clientes') {
+          <section class="section-detail" aria-labelledby="section-clientes-heading">
+            <mat-card appearance="outlined" class="detail-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="card-avatar avatar-clients">people</mat-icon>
+                <mat-card-title id="section-clientes-heading">Módulo de Clientes (Demostración)</mat-card-title>
+                <mat-card-subtitle>Visualización preliminar de la interfaz</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="demo-tag">[DEMOSTRACIÓN]</div>
+                <p class="detail-message">
+                  Esta pantalla corresponde a la maqueta de Clientes. El padrón y cuenta corriente de clientes serán provistos
+                  por la API de almacén en una fase posterior.
+                </p>
+                <div class="demo-box">
+                  <strong>Estado:</strong> Selección activa en menú lateral: <em>Clientes</em>.
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-flat-button color="primary" type="button" (click)="selectSection('inicio')">
+                  Volver al Inicio
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </section>
+        }
+
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
