@@ -1,0 +1,81 @@
+/* Estructura general */
+.sidenav-container {
+  height: 100vh;
+}
+
+/* Menú lateral */
+.sidenav {
+  width: 240px;
+  padding: 16px;
+  background-color: #f5f5f5;
+}
+
+.menu-title {
+  margin: 10px 8px 20px;
+  font-size: 22px;
+}
+
+/* Opciones del menú */
+.sidenav button {
+  width: 100%;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+/* Opción seleccionada */
+.sidenav button.seleccionado {
+  background-color: #dbe8ff;
+  font-weight: bold;
+}
+
+/* Barra superior */
+mat-toolbar {
+  height: 64px;
+  font-size: 20px;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Contenido principal */
+.contenido {
+  padding: 32px;
+}
+
+.contenido h1 {
+  margin-bottom: 8px;
+  font-size: 32px;
+}
+
+.contenido > p {
+  margin-bottom: 30px;
+}
+
+/* Contenedor de tarjetas */
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Tarjetas */
+mat-card {
+  padding: 10px;
+  min-height: 130px;
+}
+
+/* Accesibilidad con teclado */
+.sidenav button:focus-visible {
+  outline: 3px solid #005cbb;
+  outline-offset: 2px;
+}
+
+/* Adaptación para pantallas más pequeñas */
+@media (max-width: 800px) {
+  .tarjetas {
+    grid-template-columns: 1fr;
+  }
+
+  .contenido {
+    padding: 16px;
+  }
+}
