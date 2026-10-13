@@ -109,3 +109,67 @@ mat-card {
 .tabla-productos tbody tr:hover {
   background-color: #f5f5f5;
 }
+
+/* =====================================
+   FORMULARIO DE PRODUCTOS
+===================================== */
+
+.formulario-producto {
+  margin-top: 20px;
+  margin-bottom: 25px;
+  padding: 20px;
+  max-width: 850px;
+}
+
+/* Organizar los campos en dos columnas */
+.campos-producto {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Etiquetas de los campos */
+.campos-producto label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 500;
+}
+
+/* Cuadros de texto y números */
+.campos-producto input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+/* Resaltar el campo seleccionado */
+.campos-producto input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+}
+
+/* Botones Guardar y Cancelar */
+.acciones-formulario {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+/* Adaptación para celulares */
+@media (max-width: 600px) {
+  .campos-producto {
+    grid-template-columns: 1fr;
+  }
+
+  .formulario-producto {
+    padding: 12px;
+  }
+}

@@ -1,3 +1,4 @@
+
 <mat-sidenav-container class="sidenav-container">
 
   <!-- MENÚ LATERAL -->
@@ -11,111 +12,71 @@
 
     <mat-nav-list aria-label="Navegación principal">
 
-      <!-- INICIO -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Inicio')"
         [class.seleccionado]="opcionSeleccionada === 'Inicio'">
-
         <mat-icon matListItemIcon>home</mat-icon>
         <span matListItemTitle>Inicio</span>
-
       </button>
 
-      <!-- PRODUCTOS -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Productos')"
         [class.seleccionado]="opcionSeleccionada === 'Productos'">
-
         <mat-icon matListItemIcon>inventory_2</mat-icon>
         <span matListItemTitle>Productos</span>
-
       </button>
 
-      <!-- VENTAS -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Ventas')"
         [class.seleccionado]="opcionSeleccionada === 'Ventas'">
-
         <mat-icon matListItemIcon>shopping_cart</mat-icon>
         <span matListItemTitle>Ventas</span>
-
       </button>
 
-      <!-- CLIENTES -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Clientes')"
         [class.seleccionado]="opcionSeleccionada === 'Clientes'">
-
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Clientes</span>
-
       </button>
 
-      <!-- PROVEEDORES -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Proveedores')"
         [class.seleccionado]="opcionSeleccionada === 'Proveedores'">
-
         <mat-icon matListItemIcon>local_shipping</mat-icon>
         <span matListItemTitle>Proveedores</span>
-
       </button>
 
-      <!-- FIADOS -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Fiados')"
         [class.seleccionado]="opcionSeleccionada === 'Fiados'">
-
         <mat-icon matListItemIcon>receipt_long</mat-icon>
         <span matListItemTitle>Fiados</span>
-
       </button>
 
-      <!-- REPORTES -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Reportes')"
         [class.seleccionado]="opcionSeleccionada === 'Reportes'">
-
         <mat-icon matListItemIcon>bar_chart</mat-icon>
         <span matListItemTitle>Reportes</span>
-
       </button>
 
     </mat-nav-list>
 
   </mat-sidenav>
 
-
   <!-- CONTENIDO PRINCIPAL -->
   <mat-sidenav-content>
 
-    <!-- ENCABEZADO -->
     <mat-toolbar>
 
-      <!-- Botón hamburguesa solo para pantallas pequeñas -->
       @if (esPantallaPequena) {
         <button
           mat-icon-button
           type="button"
           (click)="sidenav.toggle()"
           aria-label="Abrir o cerrar menú de navegación">
-
           <mat-icon>menu</mat-icon>
-
         </button>
       }
 
@@ -123,136 +84,255 @@
 
     </mat-toolbar>
 
+    <main class="contenido">
 
-   
-<main class="contenido">
+      <h1>{{ opcionSeleccionada }}</h1>
 
-  <h1>{{ opcionSeleccionada }}</h1>
+      <!-- PANTALLA DE INICIO -->
+      @if (opcionSeleccionada === 'Inicio') {
 
-  <!-- PANTALLA DE INICIO -->
-  @if (opcionSeleccionada === 'Inicio') {
+        <p>Bienvenido al sistema de Gestión de Almacén.</p>
 
-    <p>Bienvenido al sistema de Gestión de Almacén.</p>
+        <div class="tarjetas">
 
-    <div class="tarjetas">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Productos</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Total de productos: {{ productos.length }}</p>
+            </mat-card-content>
+          </mat-card>
 
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Productos</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Total de productos: {{ productos.length }}</p>
-        </mat-card-content>
-      </mat-card>
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Ventas</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Datos de demostración</p>
+            </mat-card-content>
+          </mat-card>
 
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Ventas</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Datos de demostración</p>
-        </mat-card-content>
-      </mat-card>
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Clientes</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Datos de demostración</p>
+            </mat-card-content>
+          </mat-card>
 
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Clientes</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Datos de demostración</p>
-        </mat-card-content>
-      </mat-card>
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Proveedores</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Datos de demostración</p>
+            </mat-card-content>
+          </mat-card>
 
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Proveedores</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Datos de demostración</p>
-        </mat-card-content>
-      </mat-card>
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Fiados</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Datos de demostración</p>
+            </mat-card-content>
+          </mat-card>
 
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Fiados</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Datos de demostración</p>
-        </mat-card-content>
-      </mat-card>
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Reportes</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Datos de demostración</p>
+            </mat-card-content>
+          </mat-card>
 
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Reportes</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Datos de demostración</p>
-        </mat-card-content>
-      </mat-card>
+        </div>
+      }
 
-    </div>
-  }
+      <!-- PANTALLA DE PRODUCTOS -->
+      @if (opcionSeleccionada === 'Productos') {
 
-  <!-- PANTALLA DE PRODUCTOS -->
-  @if (opcionSeleccionada === 'Productos') {
+        <p>Listado de productos registrados en el almacén.</p>
 
-    <p>Listado de productos registrados en el almacén.</p>
+        <!-- BOTÓN AGREGAR PRODUCTO -->
+        <button
+          mat-raised-button
+          type="button"
+          (click)="abrirFormularioProducto()">
+          <mat-icon>add</mat-icon>
+          Agregar producto
+        </button>
 
-    @if (cargandoProductos) {
-      <p>Cargando productos...</p>
-    }
+        <!-- FORMULARIO PARA AGREGAR PRODUCTO -->
+        @if (mostrarFormularioProducto) {
 
-    @if (errorProductos) {
-      <p>{{ errorProductos }}</p>
-    }
+          <mat-card class="formulario-producto">
 
-    @if (!cargandoProductos && !errorProductos) {
+            <mat-card-header>
+              <mat-card-title>
+                Registrar nuevo producto
+              </mat-card-title>
+            </mat-card-header>
 
-      <div class="tabla-contenedor">
-        <table class="tabla-productos">
+            <mat-card-content>
 
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Producto</th>
-              <th>Descripción</th>
-              <th>Precio venta</th>
-              <th>Stock</th>
-            </tr>
-          </thead>
+              <form #formProducto="ngForm">
 
-          <tbody>
-            @for (producto of productos; track producto.idProducto) {
-              <tr>
-                <td>{{ producto.idProducto }}</td>
-                <td>{{ producto.nombre }}</td>
-                <td>{{ producto.descripcion }}</td>
-                <td>{{ producto.precioVenta }}</td>
-                <td>{{ producto.stock }}</td>
-              </tr>
-            } @empty {
-              <tr>
-                <td colspan="5">No hay productos registrados.</td>
-              </tr>
-            }
-          </tbody>
+                <div class="campos-producto">
 
-        </table>
-      </div>
+                  <label>
+                    Nombre:
+                    <input
+                      type="text"
+                      name="nombre"
+                      [(ngModel)]="nuevoProducto.nombre"
+                      required>
+                  </label>
 
-    }
-  }
+                  <label>
+                    Descripción:
+                    <input
+                      type="text"
+                      name="descripcion"
+                      [(ngModel)]="nuevoProducto.descripcion">
+                  </label>
 
-  <!-- OTRAS SECCIONES -->
-  @if (opcionSeleccionada !== 'Inicio' &&
-       opcionSeleccionada !== 'Productos') {
+                  <label>
+                    Precio de compra:
+                    <input
+                      type="number"
+                      name="precioCompra"
+                      [(ngModel)]="nuevoProducto.precioCompra"
+                      min="0"
+                      step="0.01"
+                      required>
+                  </label>
 
-    <p>Sección {{ opcionSeleccionada }}.</p>
-    <p>Próximamente incorporaremos sus funcionalidades.</p>
+                  <label>
+                    Precio de venta:
+                    <input
+                      type="number"
+                      name="precioVenta"
+                      [(ngModel)]="nuevoProducto.precioVenta"
+                      min="0"
+                      step="0.01"
+                      required>
+                  </label>
 
-  }
+                  <label>
+                    Stock:
+                    <input
+                      type="number"
+                      name="stock"
+                      [(ngModel)]="nuevoProducto.stock"
+                      step="0.001"
+                      required>
+                  </label>
 
-</main>
+                  <label>
+                    Stock mínimo:
+                    <input
+                      type="number"
+                      name="stockMinimo"
+                      [(ngModel)]="nuevoProducto.stockMinimo"
+                      min="0"
+                      step="0.001"
+                      required>
+                  </label>
+
+                </div>
+
+                <div class="acciones-formulario">
+
+                  
+                <button
+                  mat-raised-button
+                  type="button"
+                  (click)="guardarProducto()"
+                  [disabled]="formProducto.invalid">
+                <mat-icon>save</mat-icon>
+                  Guardar
+                 </button>
+
+
+                  <button
+                    mat-button
+                    type="button"
+                    (click)="cerrarFormularioProducto()">
+                    Cancelar
+                  </button>
+
+                </div>
+
+              </form>
+
+            </mat-card-content>
+
+          </mat-card>
+        }
+
+        <!-- LISTADO DE PRODUCTOS -->
+        @if (cargandoProductos) {
+          <p>Cargando productos...</p>
+        }
+
+        @if (errorProductos) {
+          <p>{{ errorProductos }}</p>
+        }
+
+        @if (!cargandoProductos && !errorProductos) {
+
+          <div class="tabla-contenedor">
+
+            <table class="tabla-productos">
+
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Producto</th>
+                  <th>Descripción</th>
+                  <th>Precio venta</th>
+                  <th>Stock</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (producto of productos; track producto.idProducto) {
+                  <tr>
+                    <td>{{ producto.idProducto }}</td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.descripcion }}</td>
+                    <td>{{ producto.precioVenta }}</td>
+                    <td>{{ producto.stock }}</td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="5">
+                      No hay productos registrados.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+
+            </table>
+
+          </div>
+        }
+      }
+
+      <!-- OTRAS SECCIONES -->
+      @if (opcionSeleccionada !== 'Inicio' &&
+           opcionSeleccionada !== 'Productos') {
+
+        <p>Sección {{ opcionSeleccionada }}.</p>
+        <p>Próximamente incorporaremos sus funcionalidades.</p>
+
+      }
+
+    </main>
 
   </mat-sidenav-content>
 

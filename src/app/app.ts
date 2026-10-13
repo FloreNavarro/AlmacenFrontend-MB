@@ -1,5 +1,7 @@
 
 import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -18,18 +20,40 @@ import { Producto, ProductoService } from './producto.service';
     MatListModule,
     MatIconModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    FormsModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App implements OnInit {
 
+  // =====================================
+  // SERVICIO DE PRODUCTOS
+  // =====================================
+
   private productoService = inject(ProductoService);
+
+  // =====================================
+  // MENÚ LATERAL
+  // =====================================
 
   opcionSeleccionada = 'Inicio';
 
   esPantallaPequena = window.innerWidth <= 800;
+
+  @HostListener('window:resize')
+  alCambiarTamano(): void {
+    this.esPantallaPequena = window.innerWidth <= 800;
+  }
+
+  seleccionarOpcion(opcion: string): void {
+    this.opcionSeleccionada = opcion;
+  }
+
+  // =====================================
+  // LISTADO DE PRODUCTOS
+  // =====================================
 
   productos: Producto[] = [];
 
@@ -48,23 +72,79 @@ export class App implements OnInit {
       next: (datos) => {
         this.productos = datos;
         this.cargandoProductos = false;
+
         console.log('Productos recibidos:', datos);
       },
       error: (error) => {
         console.error('Error al obtener productos:', error);
+
         this.errorProductos = 'No se pudieron cargar los productos.';
         this.cargandoProductos = false;
       }
     });
   }
 
-  @HostListener('window:resize')
-  alCambiarTamano(): void {
-    this.esPantallaPequena = window.innerWidth <= 800;
+  // =====================================
+  // FORMULARIO DE PRODUCTOS
+  // =====================================
+
+  mostrarFormularioProducto = false;
+
+  nuevoProducto: Omit<Producto, 'idProducto'> = {
+    nombre: '',
+    descripcion: '',
+    precioCompra: 0,
+    precioVenta: 0,
+    stock: 0,
+    stockMinimo: 0
+  };
+
+  // ABRIR FORMULARIO
+  abrirFormularioProducto(): void {
+    this.nuevoProducto = {
+      nombre: '',
+      descripcion: '',
+      precioCompra: 0,
+      precioVenta: 0,
+      stock: 0,
+      stockMinimo: 0
+    };
+
+    this.mostrarFormularioProducto = true;
   }
 
-  seleccionarOpcion(opcion: string): void {
-    this.opcionSeleccionada = opcion;
+  // CERRAR FORMULARIO
+  cerrarFormularioProducto(): void {
+    this.mostrarFormularioProducto = false;
+  }
+
+  // GUARDAR PRODUCTO EN MYSQL
+  guardarProducto(): void {
+
+    this.productoService.guardarProducto(this.nuevoProducto)
+      .subscribe({
+
+        next: (productoGuardado) => {
+
+          console.log('Producto guardado:', productoGuardado);
+
+          alert('Producto registrado correctamente');
+
+          this.cerrarFormularioProducto();
+
+          // Actualizar la tabla
+          this.cargarProductos();
+        },
+
+        error: (error) => {
+
+          console.error('Error al guardar producto:', error);
+
+          alert('No se pudo registrar el producto');
+        }
+
+      });
   }
 
 }
+

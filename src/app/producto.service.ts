@@ -22,7 +22,33 @@ export class ProductoService {
 
   private apiUrl = 'http://localhost:8080/api/productos';
 
+  // CONSULTAR PRODUCTOS
   obtenerProductos(): Observable<Producto[]> {
     return this.http.get<Producto[]>(this.apiUrl);
+  }
+
+  // AGREGAR PRODUCTO
+  guardarProducto(
+    producto: Omit<Producto, 'idProducto'>
+  ): Observable<Producto> {
+    return this.http.post<Producto>(this.apiUrl, producto);
+  }
+
+  // MODIFICAR PRODUCTO
+  modificarProducto(
+    id: number,
+    producto: Producto
+  ): Observable<Producto> {
+    return this.http.put<Producto>(
+      `${this.apiUrl}/${id}`,
+      producto
+    );
+  }
+
+  // ELIMINAR PRODUCTO
+  eliminarProducto(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`
+    );
   }
 }
