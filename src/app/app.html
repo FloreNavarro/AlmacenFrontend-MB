@@ -247,16 +247,14 @@
 
                 <div class="acciones-formulario">
 
-                  
-                <button
-                  mat-raised-button
-                  type="button"
-                  (click)="guardarProducto()"
-                  [disabled]="formProducto.invalid">
-                <mat-icon>save</mat-icon>
-                  Guardar
-                 </button>
-
+                  <button
+                    mat-raised-button
+                    type="button"
+                    (click)="guardarProducto()"
+                    [disabled]="formProducto.invalid">
+                    <mat-icon>save</mat-icon>
+                    Guardar
+                  </button>
 
                   <button
                     mat-button
@@ -323,9 +321,164 @@
         }
       }
 
+      <!-- PANTALLA DE FIADOS -->
+      @if (opcionSeleccionada === 'Fiados') {
+
+        <p>Gestión de fiados y pagos del almacén.</p>
+
+        <!-- BOTÓN REGISTRAR FIADO -->
+        <button
+          mat-raised-button
+          type="button"
+          (click)="abrirFormularioFiado()">
+          <mat-icon>add</mat-icon>
+          Registrar fiado
+        </button>
+
+        <!-- FORMULARIO DE NUEVO FIADO -->
+        @if (mostrarFormularioFiado) {
+
+          <mat-card class="formulario-producto">
+
+            <mat-card-header>
+              <mat-card-title>Registrar nuevo fiado</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+
+              <form #formFiado="ngForm">
+
+                <div class="campos-producto">
+
+                  <label>
+                    Cliente:
+                    <select
+                      name="idCliente"
+                      [(ngModel)]="nuevoFiado.idCliente"
+                      required>
+
+                      <option [ngValue]="0" disabled>
+                        Seleccionar cliente
+                      </option>
+
+                      @for (cliente of clientes; track cliente.idCliente) {
+                        <option [ngValue]="cliente.idCliente">
+                          {{ cliente.nombre }} {{ cliente.apellido }}
+                        </option>
+                      }
+
+                    </select>
+                  </label>
+
+                  <label>
+                    Monto del fiado:
+                    <input
+                      type="number"
+                      name="monto"
+                      [(ngModel)]="nuevoFiado.monto"
+                      min="0.01"
+                      step="0.01"
+                      required>
+                  </label>
+
+                </div>
+
+                <!-- BOTONES DEL FORMULARIO -->
+                <div class="acciones-formulario">
+
+                  <button
+                    mat-raised-button
+                    type="button"
+                    (click)="guardarFiado()"
+                    [disabled]="formFiado.invalid || nuevoFiado.idCliente <= 0 || nuevoFiado.monto <= 0">
+                    <mat-icon>save</mat-icon>
+                    Guardar fiado
+                  </button>
+
+                  <button
+                    mat-button
+                    type="button"
+                    (click)="cerrarFormularioFiado()">
+                    Cancelar
+                  </button>
+
+                </div>
+
+              </form>
+
+            </mat-card-content>
+
+          </mat-card>
+        }
+
+        <!-- LISTADO DE FIADOS -->
+        <mat-card>
+
+          <mat-card-header>
+            <mat-card-title>Listado de fiados</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+
+            @if (cargandoFiados) {
+              <p>Cargando fiados...</p>
+            }
+
+            @if (errorFiados) {
+              <p>{{ errorFiados }}</p>
+            }
+
+            @if (!cargandoFiados && !errorFiados) {
+
+              <div class="tabla-contenedor">
+
+                <table class="tabla-productos">
+
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Cliente</th>
+                      <th>Monto total</th>
+                      <th>Saldo</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    @for (fiado of fiados; track fiado.idFiado) {
+                      <tr>
+                        <td>{{ fiado.idFiado }}</td>
+                        <td>
+                          {{ fiado.cliente?.nombre }}
+                          {{ fiado.cliente?.apellido }}
+                        </td>
+                        <td>{{ fiado.montoTotal }}</td>
+                        <td>{{ fiado.saldo }}</td>
+                        <td>{{ fiado.estado }}</td>
+                      </tr>
+                    } @empty {
+                      <tr>
+                        <td colspan="5">
+                          No hay fiados registrados.
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+
+                </table>
+
+              </div>
+            }
+
+          </mat-card-content>
+
+        </mat-card>
+      }
+
       <!-- OTRAS SECCIONES -->
       @if (opcionSeleccionada !== 'Inicio' &&
-           opcionSeleccionada !== 'Productos') {
+           opcionSeleccionada !== 'Productos' &&
+           opcionSeleccionada !== 'Fiados') {
 
         <p>Sección {{ opcionSeleccionada }}.</p>
         <p>Próximamente incorporaremos sus funcionalidades.</p>

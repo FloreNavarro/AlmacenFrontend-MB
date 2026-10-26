@@ -1,5 +1,4 @@
-
-import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -10,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 import { Producto, ProductoService } from './producto.service';
-
+import { Fiado, FiadoService, Cliente } from './fiado.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -27,12 +26,81 @@ import { Producto, ProductoService } from './producto.service';
   styleUrl: './app.css'
 })
 export class App implements OnInit {
+cargarClientes(): void {
+  this.fiadoService.obtenerClientes().subscribe({
+    next: (datos) => {
+      this.clientes = datos;
+      this.cdr.detectChanges();
+    },
 
+    error: (error) => {
+      console.error('Error al cargar clientes:', error);
+    }
+  });
+}
   // =====================================
   // SERVICIO DE PRODUCTOS
   // =====================================
 
   private productoService = inject(ProductoService);
+private fiadoService = inject(FiadoService);
+private cdr = inject(ChangeDetectorRef);
+fiados: Fiado[] = [];
+cargandoFiados = false;
+errorFiados = '';
+clientes: Cliente[] = [];
+// =====================================
+// FORMULARIO DE FIADOS
+// =====================================
+
+mostrarFormularioFiado = false;
+
+nuevoFiado = {
+  idCliente: 0,
+  monto: 0
+};
+
+abrirFormularioFiado(): void {
+  this.nuevoFiado = {
+    idCliente: 0,
+    monto: 0
+  };
+
+  this.mostrarFormularioFiado = true;
+
+  // Consultar los clientes registrados en MySQL
+  this.cargarClientes();
+}
+cerrarFormularioFiado(): void {
+  this.mostrarFormularioFiado = false;
+}
+guardarFiado(): void {
+
+  if (this.nuevoFiado.idCliente <= 0 ||
+      this.nuevoFiado.monto <= 0) {
+    alert('Ingresá un cliente válido y un monto mayor a cero.');
+    return;
+  }
+
+  this.fiadoService.registrarFiado(
+    this.nuevoFiado.idCliente,
+    this.nuevoFiado.monto
+  ).subscribe({
+
+    next: () => {
+      alert('Fiado registrado correctamente');
+
+      this.cerrarFormularioFiado();
+      this.cargarFiados();
+    },
+
+    error: (error) => {
+      console.error('Error al registrar fiado:', error);
+      alert('No se pudo registrar el fiado');
+    }
+
+  });
+}
 
   // =====================================
   // MENÚ LATERAL
@@ -47,9 +115,13 @@ export class App implements OnInit {
     this.esPantallaPequena = window.innerWidth <= 800;
   }
 
-  seleccionarOpcion(opcion: string): void {
-    this.opcionSeleccionada = opcion;
+ seleccionarOpcion(opcion: string): void {
+  this.opcionSeleccionada = opcion;
+
+  if (opcion === 'Fiados') {
+    this.cargarFiados();
   }
+}
 
   // =====================================
   // LISTADO DE PRODUCTOS
@@ -83,7 +155,34 @@ export class App implements OnInit {
       }
     });
   }
+// =====================================
+// LISTADO DE FIADOS
+// =====================================
 
+cargarFiados(): void {
+  this.cargandoFiados = true;
+  this.errorFiados = '';
+
+  this.fiadoService.obtenerFiados().subscribe({
+    next: (datos) => {
+      this.fiados = datos;
+      this.cargandoFiados = false;
+
+      this.cdr.detectChanges();
+
+      console.log('Fiados recibidos:', datos);
+    },
+
+    error: (error) => {
+      console.error('Error al obtener fiados:', error);
+
+      this.errorFiados = 'No se pudieron cargar los fiados.';
+      this.cargandoFiados = false;
+
+      this.cdr.detectChanges();
+    }
+  });
+}
   // =====================================
   // FORMULARIO DE PRODUCTOS
   // =====================================
