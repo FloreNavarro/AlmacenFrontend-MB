@@ -410,7 +410,74 @@
 
           </mat-card>
         }
+<!-- FORMULARIO PARA REGISTRAR PAGOS -->
+@if (mostrarFormularioPago && fiadoSeleccionado) {
 
+  <mat-card class="formulario-producto">
+
+    <mat-card-header>
+      <mat-card-title>Registrar pago</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <p>
+        <strong>Cliente:</strong>
+        {{ fiadoSeleccionado.cliente.nombre }}
+        {{ fiadoSeleccionado.cliente.apellido }}
+      </p>
+
+      <p>
+        <strong>Saldo pendiente:</strong>
+        ${{ fiadoSeleccionado.saldo }}
+      </p>
+
+      <form #formPago="ngForm">
+
+        <div class="campos-producto">
+
+          <label>
+            Importe a pagar:
+            <input
+              type="number"
+              name="importePago"
+              [(ngModel)]="importePago"
+              min="0.01"
+              [max]="fiadoSeleccionado.saldo"
+              step="0.01"
+              required>
+          </label>
+
+        </div>
+
+        <div class="acciones-formulario">
+
+<button
+  mat-raised-button
+  type="button"
+  (click)="confirmarPago()"
+  [disabled]="formPago.invalid || importePago <= 0 || importePago > fiadoSeleccionado.saldo">
+
+  <mat-icon>payments</mat-icon>
+  Confirmar pago
+
+</button>
+          <button
+            mat-button
+            type="button"
+            (click)="cerrarFormularioPago()">
+            Cancelar
+          </button>
+
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+}
         <!-- LISTADO DE FIADOS -->
         <mat-card>
 
@@ -441,29 +508,44 @@
                       <th>Monto total</th>
                       <th>Saldo</th>
                       <th>Estado</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
+<tbody>
+  @for (fiado of fiados; track fiado.idFiado) {
+    <tr>
+      <td>{{ fiado.idFiado }}</td>
 
-                  <tbody>
-                    @for (fiado of fiados; track fiado.idFiado) {
-                      <tr>
-                        <td>{{ fiado.idFiado }}</td>
-                        <td>
-                          {{ fiado.cliente?.nombre }}
-                          {{ fiado.cliente?.apellido }}
-                        </td>
-                        <td>{{ fiado.montoTotal }}</td>
-                        <td>{{ fiado.saldo }}</td>
-                        <td>{{ fiado.estado }}</td>
-                      </tr>
-                    } @empty {
-                      <tr>
-                        <td colspan="5">
-                          No hay fiados registrados.
-                        </td>
-                      </tr>
-                    }
-                  </tbody>
+      <td>
+        {{ fiado.cliente?.nombre }}
+        {{ fiado.cliente?.apellido }}
+      </td>
+
+      <td>{{ fiado.montoTotal }}</td>
+
+      <td>{{ fiado.saldo }}</td>
+
+      <td>{{ fiado.estado }}</td>
+
+      <td>
+        <button
+          mat-raised-button
+          type="button"
+          (click)="abrirFormularioPago(fiado)"
+          [disabled]="fiado.saldo <= 0">
+          <mat-icon>payments</mat-icon>
+          Registrar pago
+        </button>
+      </td>
+    </tr>
+  } @empty {
+    <tr>
+      <td colspan="6">
+        No hay fiados registrados.
+      </td>
+    </tr>
+  }
+</tbody>
 
                 </table>
 

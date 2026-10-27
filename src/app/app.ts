@@ -155,7 +155,66 @@ guardarFiado(): void {
       }
     });
   }
+
 // =====================================
+// FORMULARIO PARA REGISTRAR PAGOS
+// =====================================
+
+mostrarFormularioPago = false;
+
+fiadoSeleccionado: Fiado | null = null;
+
+importePago = 0;
+
+abrirFormularioPago(fiado: Fiado): void {
+  this.fiadoSeleccionado = fiado;
+  this.importePago = 0;
+  this.mostrarFormularioPago = true;
+}
+
+cerrarFormularioPago(): void {
+  this.mostrarFormularioPago = false;
+  this.fiadoSeleccionado = null;
+  this.importePago = 0;
+}
+
+confirmarPago(): void {
+
+  if (!this.fiadoSeleccionado) {
+    return;
+  }
+
+  if (
+    this.importePago <= 0 ||
+    this.importePago > this.fiadoSeleccionado.saldo
+  ) {
+    alert('El importe debe ser mayor a cero y no superar el saldo pendiente.');
+    return;
+  }
+
+  const idFiado = this.fiadoSeleccionado.idFiado;
+
+  this.fiadoService.registrarPago(
+    idFiado,
+    this.importePago
+  ).subscribe({
+
+    next: () => {
+      alert('Pago registrado correctamente');
+
+      this.cerrarFormularioPago();
+      this.cargarFiados();
+    },
+
+    error: (error) => {
+      console.error('Error al registrar el pago:', error);
+      alert('No se pudo registrar el pago');
+    }
+
+  });
+}
+
+  // =====================================
 // LISTADO DE FIADOS
 // =====================================
 
