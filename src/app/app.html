@@ -1,3 +1,4 @@
+
 <mat-sidenav-container class="sidenav-container">
 
   <!-- MENÚ LATERAL -->
@@ -11,111 +12,71 @@
 
     <mat-nav-list aria-label="Navegación principal">
 
-      <!-- INICIO -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Inicio')"
         [class.seleccionado]="opcionSeleccionada === 'Inicio'">
-
         <mat-icon matListItemIcon>home</mat-icon>
         <span matListItemTitle>Inicio</span>
-
       </button>
 
-      <!-- PRODUCTOS -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Productos')"
         [class.seleccionado]="opcionSeleccionada === 'Productos'">
-
         <mat-icon matListItemIcon>inventory_2</mat-icon>
         <span matListItemTitle>Productos</span>
-
       </button>
 
-      <!-- VENTAS -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Ventas')"
         [class.seleccionado]="opcionSeleccionada === 'Ventas'">
-
         <mat-icon matListItemIcon>shopping_cart</mat-icon>
         <span matListItemTitle>Ventas</span>
-
       </button>
 
-      <!-- CLIENTES -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Clientes')"
         [class.seleccionado]="opcionSeleccionada === 'Clientes'">
-
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Clientes</span>
-
       </button>
 
-      <!-- PROVEEDORES -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Proveedores')"
         [class.seleccionado]="opcionSeleccionada === 'Proveedores'">
-
         <mat-icon matListItemIcon>local_shipping</mat-icon>
         <span matListItemTitle>Proveedores</span>
-
       </button>
 
-      <!-- FIADOS -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Fiados')"
         [class.seleccionado]="opcionSeleccionada === 'Fiados'">
-
         <mat-icon matListItemIcon>receipt_long</mat-icon>
         <span matListItemTitle>Fiados</span>
-
       </button>
 
-      <!-- REPORTES -->
-      <button
-        mat-list-item
-        type="button"
+      <button mat-list-item type="button"
         (click)="seleccionarOpcion('Reportes')"
         [class.seleccionado]="opcionSeleccionada === 'Reportes'">
-
         <mat-icon matListItemIcon>bar_chart</mat-icon>
         <span matListItemTitle>Reportes</span>
-
       </button>
 
     </mat-nav-list>
 
   </mat-sidenav>
 
-
   <!-- CONTENIDO PRINCIPAL -->
   <mat-sidenav-content>
 
-    <!-- ENCABEZADO -->
     <mat-toolbar>
 
-      <!-- Botón hamburguesa solo para pantallas pequeñas -->
       @if (esPantallaPequena) {
         <button
           mat-icon-button
           type="button"
           (click)="sidenav.toggle()"
           aria-label="Abrir o cerrar menú de navegación">
-
           <mat-icon>menu</mat-icon>
-
         </button>
       }
 
@@ -123,90 +84,654 @@
 
     </mat-toolbar>
 
-
     <main class="contenido">
 
-      <!-- Cambia según la opción seleccionada -->
       <h1>{{ opcionSeleccionada }}</h1>
 
-      <p>Bienvenido al sistema de Gestión de Almacén.</p>
+      <!-- PANTALLA DE INICIO -->
+      @if (opcionSeleccionada === 'Inicio') {
 
+        <p>Bienvenido al sistema de Gestión de Almacén.</p>
 
-      <!-- TARJETAS DEL DASHBOARD -->
-      <div class="tarjetas">
+        <div class="tarjetas">
 
-        <!-- PRODUCTOS -->
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Productos</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Total de productos: {{ productos.length }}</p>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Ventas</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Datos de demostración</p>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Clientes</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Total de clientes: {{ clientes.length }}</p>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Proveedores</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Datos de demostración</p>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Fiados</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Fiados pendientes: {{ cantidadFiadosPendientes }}</p>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Reportes</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Datos de demostración</p>
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+      }
+
+      <!-- PANTALLA DE PRODUCTOS -->
+      @if (opcionSeleccionada === 'Productos') {
+
+        <p>Listado de productos registrados en el almacén.</p>
+
+        <!-- BOTÓN AGREGAR PRODUCTO -->
+        <button
+          mat-raised-button
+          type="button"
+          (click)="abrirFormularioProducto()">
+          <mat-icon>add</mat-icon>
+          Agregar producto
+        </button>
+
+        <!-- FORMULARIO PARA AGREGAR PRODUCTO -->
+        @if (mostrarFormularioProducto) {
+
+          <mat-card class="formulario-producto">
+
+            <mat-card-header>
+              <mat-card-title>
+                Registrar nuevo producto
+              </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+
+              <form #formProducto="ngForm">
+
+                <div class="campos-producto">
+
+                  <label>
+                    Nombre:
+                    <input
+                      type="text"
+                      name="nombre"
+                      [(ngModel)]="nuevoProducto.nombre"
+                      required>
+                  </label>
+
+                  <label>
+                    Descripción:
+                    <input
+                      type="text"
+                      name="descripcion"
+                      [(ngModel)]="nuevoProducto.descripcion">
+                  </label>
+
+                  <label>
+                    Precio de compra:
+                    <input
+                      type="number"
+                      name="precioCompra"
+                      [(ngModel)]="nuevoProducto.precioCompra"
+                      min="0"
+                      step="0.01"
+                      required>
+                  </label>
+
+                  <label>
+                    Precio de venta:
+                    <input
+                      type="number"
+                      name="precioVenta"
+                      [(ngModel)]="nuevoProducto.precioVenta"
+                      min="0"
+                      step="0.01"
+                      required>
+                  </label>
+
+                  <label>
+                    Stock:
+                    <input
+                      type="number"
+                      name="stock"
+                      [(ngModel)]="nuevoProducto.stock"
+                      step="0.001"
+                      required>
+                  </label>
+
+                  <label>
+                    Stock mínimo:
+                    <input
+                      type="number"
+                      name="stockMinimo"
+                      [(ngModel)]="nuevoProducto.stockMinimo"
+                      min="0"
+                      step="0.001"
+                      required>
+                  </label>
+
+                </div>
+
+                <div class="acciones-formulario">
+
+                  <button
+                    mat-raised-button
+                    type="button"
+                    (click)="guardarProducto()"
+                    [disabled]="formProducto.invalid">
+                    <mat-icon>save</mat-icon>
+                    Guardar
+                  </button>
+
+                  <button
+                    mat-button
+                    type="button"
+                    (click)="cerrarFormularioProducto()">
+                    Cancelar
+                  </button>
+
+                </div>
+
+              </form>
+
+            </mat-card-content>
+
+          </mat-card>
+        }
+
+        <!-- LISTADO DE PRODUCTOS -->
+        @if (cargandoProductos) {
+          <p>Cargando productos...</p>
+        }
+
+        @if (errorProductos) {
+          <p>{{ errorProductos }}</p>
+        }
+
+        @if (!cargandoProductos && !errorProductos) {
+
+          <div class="tabla-contenedor">
+
+            <table class="tabla-productos">
+
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Producto</th>
+                  <th>Descripción</th>
+                  <th>Precio venta</th>
+                  <th>Stock</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (producto of productos; track producto.idProducto) {
+                  <tr>
+                    <td>{{ producto.idProducto }}</td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.descripcion }}</td>
+                    <td>{{ producto.precioVenta }}</td>
+                    <td>{{ producto.stock }}</td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="5">
+                      No hay productos registrados.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+
+            </table>
+
+          </div>
+        }
+      }
+
+      <!-- PANTALLA DE FIADOS -->
+      @if (opcionSeleccionada === 'Fiados') {
+
+        <p>Gestión de fiados y pagos del almacén.</p>
+
+        <!-- BOTÓN REGISTRAR FIADO -->
+        <button
+          mat-raised-button
+          type="button"
+          (click)="abrirFormularioFiado()">
+          <mat-icon>add</mat-icon>
+          Registrar fiado
+        </button>
+
+        <!-- FORMULARIO DE NUEVO FIADO -->
+        @if (mostrarFormularioFiado) {
+
+          <mat-card class="formulario-producto">
+
+            <mat-card-header>
+              <mat-card-title>Registrar nuevo fiado</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+
+              <form #formFiado="ngForm">
+
+                <div class="campos-producto">
+
+                  <label>
+                    Cliente:
+                    <select
+                      name="idCliente"
+                      [(ngModel)]="nuevoFiado.idCliente"
+                      required>
+
+                      <option [ngValue]="0" disabled>
+                        Seleccionar cliente
+                      </option>
+
+                      @for (cliente of clientes; track cliente.idCliente) {
+                        <option [ngValue]="cliente.idCliente">
+                          {{ cliente.nombre }} {{ cliente.apellido }}
+                        </option>
+                      }
+
+                    </select>
+                  </label>
+
+                  <label>
+                    Monto del fiado:
+                    <input
+                      type="number"
+                      name="monto"
+                      [(ngModel)]="nuevoFiado.monto"
+                      min="0.01"
+                      step="0.01"
+                      required>
+                  </label>
+
+                </div>
+
+                <!-- BOTONES DEL FORMULARIO -->
+                <div class="acciones-formulario">
+
+                  <button
+                    mat-raised-button
+                    type="button"
+                    (click)="guardarFiado()"
+                    [disabled]="formFiado.invalid || nuevoFiado.idCliente <= 0 || nuevoFiado.monto <= 0">
+                    <mat-icon>save</mat-icon>
+                    Guardar fiado
+                  </button>
+
+                  <button
+                    mat-button
+                    type="button"
+                    (click)="cerrarFormularioFiado()">
+                    Cancelar
+                  </button>
+
+                </div>
+
+              </form>
+
+            </mat-card-content>
+
+          </mat-card>
+        }
+<!-- FORMULARIO PARA REGISTRAR PAGOS -->
+@if (mostrarFormularioPago && fiadoSeleccionado) {
+
+  <mat-card class="formulario-producto">
+
+    <mat-card-header>
+      <mat-card-title>Registrar pago</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <p>
+        <strong>Cliente:</strong>
+        {{ fiadoSeleccionado.cliente.nombre }}
+        {{ fiadoSeleccionado.cliente.apellido }}
+      </p>
+
+      <p>
+        <strong>Saldo pendiente:</strong>
+        ${{ fiadoSeleccionado.saldo }}
+      </p>
+
+      <form #formPago="ngForm">
+
+        <div class="campos-producto">
+
+          <label>
+            Importe a pagar:
+            <input
+              type="number"
+              name="importePago"
+              [(ngModel)]="importePago"
+              min="0.01"
+              [max]="fiadoSeleccionado.saldo"
+              step="0.01"
+              required>
+          </label>
+
+        </div>
+
+        <div class="acciones-formulario">
+
+<button
+  mat-raised-button
+  type="button"
+  (click)="confirmarPago()"
+  [disabled]="formPago.invalid || importePago <= 0 || importePago > fiadoSeleccionado.saldo">
+
+  <mat-icon>payments</mat-icon>
+  Confirmar pago
+
+</button>
+          <button
+            mat-button
+            type="button"
+            (click)="cerrarFormularioPago()">
+            Cancelar
+          </button>
+
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+}
+        <!-- LISTADO DE FIADOS -->
         <mat-card>
+
           <mat-card-header>
-            <mat-card-title>Productos</mat-card-title>
+            <mat-card-title>Listado de fiados</mat-card-title>
           </mat-card-header>
 
           <mat-card-content>
-            <p>Datos de demostración</p>
+
+            @if (cargandoFiados) {
+              <p>Cargando fiados...</p>
+            }
+
+            @if (errorFiados) {
+              <p>{{ errorFiados }}</p>
+            }
+
+            @if (!cargandoFiados && !errorFiados) {
+
+              <div class="tabla-contenedor">
+
+                <table class="tabla-productos">
+
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Cliente</th>
+                      <th>Monto total</th>
+                      <th>Saldo</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+<tbody>
+  @for (fiado of fiados; track fiado.idFiado) {
+    <tr>
+      <td>{{ fiado.idFiado }}</td>
+
+      <td>
+        {{ fiado.cliente?.nombre }}
+        {{ fiado.cliente?.apellido }}
+      </td>
+
+      <td>{{ fiado.montoTotal }}</td>
+
+      <td>{{ fiado.saldo }}</td>
+
+      <td>{{ fiado.estado }}</td>
+
+      <td>
+        <button
+          mat-raised-button
+          type="button"
+          (click)="abrirFormularioPago(fiado)"
+          [disabled]="fiado.saldo <= 0">
+          <mat-icon>payments</mat-icon>
+          Registrar pago
+        </button>
+      </td>
+    </tr>
+  } @empty {
+    <tr>
+      <td colspan="6">
+        No hay fiados registrados.
+      </td>
+    </tr>
+  }
+</tbody>
+
+                </table>
+
+              </div>
+            }
+
           </mat-card-content>
+
         </mat-card>
+      }
+<!-- PANTALLA DE CLIENTES -->
+@if (opcionSeleccionada === 'Clientes') {
 
+  <p>Listado de clientes registrados en el almacén.</p>
 
-        <!-- VENTAS -->
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Ventas</mat-card-title>
-          </mat-card-header>
+<button
+  mat-raised-button
+  type="button"
+  (click)="abrirFormularioCliente()">
 
-          <mat-card-content>
-            <p>Datos de demostración</p>
-          </mat-card-content>
-        </mat-card>
+  <mat-icon>person_add</mat-icon>
+  Agregar cliente
 
+</button>
 
-        <!-- CLIENTES -->
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Clientes</mat-card-title>
-          </mat-card-header>
+<!-- FORMULARIO PARA REGISTRAR CLIENTES -->
+@if (mostrarFormularioCliente) {
 
-          <mat-card-content>
-            <p>Datos de demostración</p>
-          </mat-card-content>
-        </mat-card>
+  <mat-card class="formulario-producto">
 
+    <mat-card-header>
+      <mat-card-title>Registrar nuevo cliente</mat-card-title>
+    </mat-card-header>
 
-        <!-- PROVEEDORES -->
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Proveedores</mat-card-title>
-          </mat-card-header>
+    <mat-card-content>
 
-          <mat-card-content>
-            <p>Datos de demostración</p>
-          </mat-card-content>
-        </mat-card>
+      <form #formCliente="ngForm">
 
+        <div class="campos-producto">
 
-        <!-- FIADOS -->
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Fiados</mat-card-title>
-          </mat-card-header>
+          <label>
+            Nombre:
+            <input
+              type="text"
+              name="nombreCliente"
+              [(ngModel)]="nuevoCliente.nombre"
+              required>
+          </label>
 
-          <mat-card-content>
-            <p>Datos de demostración</p>
-          </mat-card-content>
-        </mat-card>
+          <label>
+            Apellido:
+            <input
+              type="text"
+              name="apellidoCliente"
+              [(ngModel)]="nuevoCliente.apellido"
+              required>
+          </label>
 
+          <label>
+            DNI:
+            <input
+              type="text"
+              name="dniCliente"
+              [(ngModel)]="nuevoCliente.dni"
+              required>
+          </label>
 
-        <!-- REPORTES -->
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Reportes</mat-card-title>
-          </mat-card-header>
+          <label>
+            Teléfono:
+            <input
+              type="text"
+              name="telefonoCliente"
+              [(ngModel)]="nuevoCliente.telefono">
+          </label>
 
-          <mat-card-content>
-            <p>Datos de demostración</p>
-          </mat-card-content>
-        </mat-card>
+          <label>
+            Dirección:
+            <input
+              type="text"
+              name="direccionCliente"
+              [(ngModel)]="nuevoCliente.direccion">
+          </label>
+
+        </div>
+
+        <div class="acciones-formulario">
+
+          <button
+  mat-raised-button
+  type="button"
+  (click)="guardarCliente()"
+  [disabled]="formCliente.invalid">
+
+  <mat-icon>save</mat-icon>
+  Guardar cliente
+
+</button>
+
+          <button
+            mat-button
+            type="button"
+            (click)="cerrarFormularioCliente()">
+            Cancelar
+          </button>
+
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+}
+
+  <mat-card>
+
+    <mat-card-header>
+      <mat-card-title>Listado de clientes</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div class="tabla-contenedor">
+
+        <table class="tabla-productos">
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>DNI</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (cliente of clientes; track cliente.idCliente) {
+              <tr>
+                <td>{{ cliente.idCliente }}</td>
+                <td>{{ cliente.nombre }}</td>
+                <td>{{ cliente.apellido }}</td>
+                <td>{{ cliente.dni }}</td>
+                <td>{{ cliente.telefono }}</td>
+                <td>{{ cliente.direccion }}</td>
+                <td>
+  <button
+    mat-raised-button
+    type="button"
+    (click)="editarCliente(cliente)">
+    <mat-icon>edit</mat-icon>
+    Editar
+  </button>
+</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7">
+                  No hay clientes registrados.
+                </td>
+              </tr>
+            }
+          </tbody>
+
+        </table>
 
       </div>
+
+    </mat-card-content>
+
+  </mat-card>
+
+}
+      <!-- OTRAS SECCIONES -->
+      @if (opcionSeleccionada !== 'Inicio' &&
+     opcionSeleccionada !== 'Productos' &&
+     opcionSeleccionada !== 'Fiados' &&
+     opcionSeleccionada !== 'Clientes') {
+
+        <p>Sección {{ opcionSeleccionada }}.</p>
+        <p>Próximamente incorporaremos sus funcionalidades.</p>
+
+      }
 
     </main>
 
