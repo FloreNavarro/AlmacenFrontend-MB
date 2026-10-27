@@ -38,6 +38,100 @@ cargarClientes(): void {
     }
   });
 }
+
+// ABRIR FORMULARIO DE CLIENTES
+abrirFormularioCliente(): void {
+  this.clienteEnEdicion = null;
+
+  this.nuevoCliente = {
+    nombre: '',
+    apellido: '',
+    dni: '',
+    telefono: '',
+    direccion: ''
+  };
+
+  this.mostrarFormularioCliente = true;
+}
+
+editarCliente(cliente: Cliente): void {
+  this.clienteEnEdicion = cliente.idCliente;
+
+  this.nuevoCliente = {
+    nombre: cliente.nombre,
+    apellido: cliente.apellido,
+    dni: cliente.dni,
+    telefono: cliente.telefono,
+    direccion: cliente.direccion
+  };
+
+  this.mostrarFormularioCliente = true;
+}
+
+// CERRAR FORMULARIO DE CLIENTES
+
+cerrarFormularioCliente(): void {
+  this.mostrarFormularioCliente = false;
+  this.clienteEnEdicion = null;
+}
+
+// GUARDAR NUEVO CLIENTE
+
+guardarCliente(): void {
+
+  if (
+    !this.nuevoCliente.nombre.trim() ||
+    !this.nuevoCliente.apellido.trim() ||
+    !this.nuevoCliente.dni.trim()
+  ) {
+    alert('Completá nombre, apellido y DNI.');
+    return;
+  }
+
+  // SI ESTAMOS EDITANDO UN CLIENTE
+  if (this.clienteEnEdicion !== null) {
+
+    this.fiadoService.actualizarCliente(
+      this.clienteEnEdicion,
+      this.nuevoCliente
+    ).subscribe({
+
+      next: () => {
+        alert('Cliente actualizado correctamente');
+
+        this.cerrarFormularioCliente();
+        this.cargarClientes();
+      },
+
+      error: (error) => {
+        console.error('Error al actualizar cliente:', error);
+        alert('No se pudo actualizar el cliente.');
+      }
+
+    });
+
+  } else {
+
+    // SI ESTAMOS REGISTRANDO UN CLIENTE NUEVO
+    this.fiadoService.registrarCliente(
+      this.nuevoCliente
+    ).subscribe({
+
+      next: () => {
+        alert('Cliente registrado correctamente');
+
+        this.cerrarFormularioCliente();
+        this.cargarClientes();
+      },
+
+      error: (error) => {
+        console.error('Error al registrar cliente:', error);
+        alert('No se pudo registrar el cliente.');
+      }
+
+    });
+  }
+}
   // =====================================
   // SERVICIO DE PRODUCTOS
   // =====================================
@@ -46,9 +140,25 @@ cargarClientes(): void {
 private fiadoService = inject(FiadoService);
 private cdr = inject(ChangeDetectorRef);
 fiados: Fiado[] = [];
+get cantidadFiadosPendientes(): number {
+  return this.fiados.filter(fiado => fiado.saldo > 0).length;
+}
 cargandoFiados = false;
 errorFiados = '';
 clientes: Cliente[] = [];
+
+// FORMULARIO PARA REGISTRAR CLIENTES
+mostrarFormularioCliente = false;
+clienteEnEdicion: number | null = null;
+
+nuevoCliente = {
+  nombre: '',
+  apellido: '',
+  dni: '',
+  telefono: '',
+  direccion: ''
+};
+
 // =====================================
 // FORMULARIO DE FIADOS
 // =====================================
@@ -121,6 +231,10 @@ guardarFiado(): void {
   if (opcion === 'Fiados') {
     this.cargarFiados();
   }
+
+  if (opcion === 'Clientes') {
+  this.cargarClientes();
+ }
 }
 
   // =====================================
@@ -133,8 +247,10 @@ guardarFiado(): void {
   errorProductos = '';
 
   ngOnInit(): void {
-    this.cargarProductos();
-  }
+  this.cargarProductos();
+  this.cargarClientes();
+  this.cargarFiados();
+}
 
   cargarProductos(): void {
     this.cargandoProductos = true;

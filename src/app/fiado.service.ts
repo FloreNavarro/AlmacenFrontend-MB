@@ -14,11 +14,16 @@ export interface Fiado {
   saldo: number;
   estado: string;
 }
+
 export interface Cliente {
   idCliente: number;
   nombre: string;
   apellido: string;
+  dni: string;
+  telefono: string;
+  direccion: string;
 }
+
 @Injectable({
   providedIn: 'root'
 })
@@ -33,6 +38,22 @@ private clientesUrl = 'http://localhost:8080/api/clientes';
 obtenerClientes(): Observable<Cliente[]> {
   return this.http.get<Cliente[]>(this.clientesUrl);
 }
+
+registrarCliente(cliente: Omit<Cliente, 'idCliente'>): Observable<Cliente> {
+  return this.http.post<Cliente>(this.clientesUrl, cliente);
+}
+
+actualizarCliente(
+  idCliente: number,
+  cliente: Omit<Cliente, 'idCliente'>
+): Observable<Cliente> {
+
+  return this.http.put<Cliente>(
+    `${this.clientesUrl}/${idCliente}`,
+    cliente
+  );
+}
+
   // CONSULTAR FIADOS
   obtenerFiados(): Observable<Fiado[]> {
     return this.http.get<Fiado[]>(this.apiUrl);

@@ -118,7 +118,7 @@
               <mat-card-title>Clientes</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <p>Datos de demostración</p>
+              <p>Total de clientes: {{ clientes.length }}</p>
             </mat-card-content>
           </mat-card>
 
@@ -136,7 +136,7 @@
               <mat-card-title>Fiados</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <p>Datos de demostración</p>
+              <p>Fiados pendientes: {{ cantidadFiadosPendientes }}</p>
             </mat-card-content>
           </mat-card>
 
@@ -556,11 +556,177 @@
 
         </mat-card>
       }
+<!-- PANTALLA DE CLIENTES -->
+@if (opcionSeleccionada === 'Clientes') {
 
+  <p>Listado de clientes registrados en el almacén.</p>
+
+<button
+  mat-raised-button
+  type="button"
+  (click)="abrirFormularioCliente()">
+
+  <mat-icon>person_add</mat-icon>
+  Agregar cliente
+
+</button>
+
+<!-- FORMULARIO PARA REGISTRAR CLIENTES -->
+@if (mostrarFormularioCliente) {
+
+  <mat-card class="formulario-producto">
+
+    <mat-card-header>
+      <mat-card-title>Registrar nuevo cliente</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <form #formCliente="ngForm">
+
+        <div class="campos-producto">
+
+          <label>
+            Nombre:
+            <input
+              type="text"
+              name="nombreCliente"
+              [(ngModel)]="nuevoCliente.nombre"
+              required>
+          </label>
+
+          <label>
+            Apellido:
+            <input
+              type="text"
+              name="apellidoCliente"
+              [(ngModel)]="nuevoCliente.apellido"
+              required>
+          </label>
+
+          <label>
+            DNI:
+            <input
+              type="text"
+              name="dniCliente"
+              [(ngModel)]="nuevoCliente.dni"
+              required>
+          </label>
+
+          <label>
+            Teléfono:
+            <input
+              type="text"
+              name="telefonoCliente"
+              [(ngModel)]="nuevoCliente.telefono">
+          </label>
+
+          <label>
+            Dirección:
+            <input
+              type="text"
+              name="direccionCliente"
+              [(ngModel)]="nuevoCliente.direccion">
+          </label>
+
+        </div>
+
+        <div class="acciones-formulario">
+
+          <button
+  mat-raised-button
+  type="button"
+  (click)="guardarCliente()"
+  [disabled]="formCliente.invalid">
+
+  <mat-icon>save</mat-icon>
+  Guardar cliente
+
+</button>
+
+          <button
+            mat-button
+            type="button"
+            (click)="cerrarFormularioCliente()">
+            Cancelar
+          </button>
+
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+}
+
+  <mat-card>
+
+    <mat-card-header>
+      <mat-card-title>Listado de clientes</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div class="tabla-contenedor">
+
+        <table class="tabla-productos">
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>DNI</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (cliente of clientes; track cliente.idCliente) {
+              <tr>
+                <td>{{ cliente.idCliente }}</td>
+                <td>{{ cliente.nombre }}</td>
+                <td>{{ cliente.apellido }}</td>
+                <td>{{ cliente.dni }}</td>
+                <td>{{ cliente.telefono }}</td>
+                <td>{{ cliente.direccion }}</td>
+                <td>
+  <button
+    mat-raised-button
+    type="button"
+    (click)="editarCliente(cliente)">
+    <mat-icon>edit</mat-icon>
+    Editar
+  </button>
+</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7">
+                  No hay clientes registrados.
+                </td>
+              </tr>
+            }
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </mat-card-content>
+
+  </mat-card>
+
+}
       <!-- OTRAS SECCIONES -->
       @if (opcionSeleccionada !== 'Inicio' &&
-           opcionSeleccionada !== 'Productos' &&
-           opcionSeleccionada !== 'Fiados') {
+     opcionSeleccionada !== 'Productos' &&
+     opcionSeleccionada !== 'Fiados' &&
+     opcionSeleccionada !== 'Clientes') {
 
         <p>Sección {{ opcionSeleccionada }}.</p>
         <p>Próximamente incorporaremos sus funcionalidades.</p>
