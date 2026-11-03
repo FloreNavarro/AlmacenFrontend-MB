@@ -83,4 +83,12 @@ registrarPago(
     { importe }
   );
 }
+
+// ELIMINAR CLIENTE
+eliminarCliente(idCliente: number): Observable<void> {
+  return this.http.delete<void>(
+    `${this.clientesUrl}/${idCliente}`
+  );
+}
+
 }
