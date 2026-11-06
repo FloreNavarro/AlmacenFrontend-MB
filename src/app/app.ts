@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -18,6 +19,7 @@ import { MatCardModule } from '@angular/material/card';
 
 import { Producto, ProductoService } from './producto.service';
 import { Fiado, FiadoService, Cliente } from './fiado.service';
+import { Venta, VentaRequest, VentaService, DetalleVentaResponse } from './venta.service';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +31,8 @@ import { Fiado, FiadoService, Cliente } from './fiado.service';
     MatIconModule,
     MatButtonModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    DecimalPipe
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -43,6 +46,158 @@ export class App implements OnInit {
   private productoService = inject(ProductoService);
   private fiadoService = inject(FiadoService);
   private cdr = inject(ChangeDetectorRef);
+  private ventaService = inject(VentaService);
+  ventas: Venta[] = [];
+  ventaSeleccionada: Venta | null = null;
+  detallesVentaSeleccionada: DetalleVentaResponse[] = [];
+  mostrarFormularioVenta = false;
+  idClienteVenta: number | null = null;
+  idProductoVenta: number | null = null;
+  cantidadVenta: number = 1;
+  porcentajeDescuentoVenta: number = 0;
+  detallesNuevaVenta: {
+    idProducto: number;
+    nombreProducto: string;
+    cantidad: number;
+    precio: number;
+    subtotal: number;
+  }[] = [];
+  // =====================================
+  // CARGAR VENTAS DESDE EL BACKEND
+  // =====================================
+
+  cargarVentas(): void {
+    this.ventaService.obtenerVentas().subscribe({
+      next: (datos) => {
+        this.ventas = datos;
+        this.cdr.detectChanges();
+      },
+
+      error: (error) => {
+        console.error('Error al cargar ventas:', error);
+      }
+    });
+  }
+
+  // CONSULTAR LOS DETALLES DE UNA VENTA
+  verDetalleVenta(venta: Venta): void {
+    this.ventaSeleccionada = venta;
+    this.detallesVentaSeleccionada = [];
+
+    this.ventaService.obtenerDetalles(venta.idVenta).subscribe({
+      next: (datos) => {
+        this.detallesVentaSeleccionada = datos;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error al cargar los detalles de la venta:', error);
+        alert('No se pudieron cargar los detalles de la venta.');
+      }
+    });
+  }
+
+  // ABRIR FORMULARIO DE VENTA
+  abrirFormularioVenta(): void {
+    this.mostrarFormularioVenta = true;
+  }
+
+  // CERRAR FORMULARIO DE VENTA
+  cerrarFormularioVenta(): void {
+    this.mostrarFormularioVenta = false;
+  }
+  agregarProductoVenta(): void {
+    if (this.idProductoVenta === null) {
+      alert('Seleccioná un producto.');
+      return;
+    }
+
+    if (!Number.isFinite(this.cantidadVenta) || this.cantidadVenta <= 0) {
+      alert('La cantidad debe ser mayor que cero.');
+      return;
+    }
+
+    const producto = this.productos.find(
+      p => p.idProducto === this.idProductoVenta
+    );
+
+    if (!producto) {
+      alert('No se encontró el producto.');
+      return;
+    }
+
+    const cantidad = Number(this.cantidadVenta);
+    const precio = Number(producto.precioVenta);
+
+    this.detallesNuevaVenta.push({
+      idProducto: producto.idProducto,
+      nombreProducto: producto.nombre,
+      cantidad: cantidad,
+      precio: precio,
+      subtotal: cantidad * precio
+    });
+
+    this.idProductoVenta = null;
+    this.cantidadVenta = 1;
+  }
+  calcularTotalVenta(): number {
+    const subtotal = this.detallesNuevaVenta.reduce(
+      (total, detalle) => total + detalle.subtotal,
+      0
+    );
+
+    const descuento = Number(this.porcentajeDescuentoVenta) || 0;
+
+    const porcentaje = Math.min(100, Math.max(0, descuento));
+
+    return subtotal - (subtotal * porcentaje / 100);
+  }
+
+  // ELIMINAR UN PRODUCTO DE LA VENTA
+  eliminarProductoVenta(indice: number): void {
+    this.detallesNuevaVenta.splice(indice, 1);
+  }
+
+  registrarVenta(): void {
+    if (this.detallesNuevaVenta.length === 0) {
+      alert('Tenés que agregar al menos un producto.');
+      return;
+    }
+
+    const request: VentaRequest = {
+      venta: {
+        cliente: this.idClienteVenta !== null
+          ? { idCliente: this.idClienteVenta }
+          : null,
+        porcentajeDescuento: this.porcentajeDescuentoVenta
+      },
+      detalles: this.detallesNuevaVenta.map(detalle => ({
+        idProducto: detalle.idProducto,
+        cantidad: detalle.cantidad
+      }))
+    };
+
+    this.ventaService.registrarVenta(request).subscribe({
+      next: () => {
+        alert('Venta registrada correctamente.');
+
+        this.detallesNuevaVenta = [];
+        this.idClienteVenta = null;
+        this.idProductoVenta = null;
+        this.cantidadVenta = 1;
+        this.porcentajeDescuentoVenta = 0;
+
+        this.cerrarFormularioVenta();
+        this.cargarVentas();
+        this.cargarProductos();
+      },
+      error: (error) => {
+        console.error('Error al registrar la venta:', error);
+        alert('No se pudo registrar la venta.');
+      }
+    });
+  }
+
+
 
   // =====================================
   // MENÚ LATERAL
@@ -71,6 +226,9 @@ export class App implements OnInit {
     if (opcion === 'Fiados') {
       this.cargarFiados();
     }
+    if (opcion === 'Ventas') {
+      this.cargarVentas();
+    }
   }
 
   // =====================================
@@ -81,6 +239,7 @@ export class App implements OnInit {
     this.cargarProductos();
     this.cargarClientes();
     this.cargarFiados();
+    this.cargarVentas();
   }
 
   // =====================================
@@ -383,36 +542,36 @@ export class App implements OnInit {
       });
     }
   }
-// =====================================
-// ELIMINAR CLIENTE
-// =====================================
+  // =====================================
+  // ELIMINAR CLIENTE
+  // =====================================
 
-eliminarCliente(cliente: Cliente): void {
+  eliminarCliente(cliente: Cliente): void {
 
-  const confirmar = confirm(
-    `¿Estás seguro de eliminar al cliente "${cliente.nombre} ${cliente.apellido}"?`
-  );
+    const confirmar = confirm(
+      `¿Estás seguro de eliminar al cliente "${cliente.nombre} ${cliente.apellido}"?`
+    );
 
-  if (!confirmar) {
-    return;
-  }
-
-  this.fiadoService.eliminarCliente(
-    cliente.idCliente
-  ).subscribe({
-
-    next: () => {
-      alert('Cliente eliminado correctamente');
-      this.cargarClientes();
-    },
-
-    error: (error) => {
-      console.error('Error al eliminar cliente:', error);
-      alert('No se pudo eliminar el cliente. Puede tener fiados asociados.');
+    if (!confirmar) {
+      return;
     }
 
-  });
-}
+    this.fiadoService.eliminarCliente(
+      cliente.idCliente
+    ).subscribe({
+
+      next: () => {
+        alert('Cliente eliminado correctamente');
+        this.cargarClientes();
+      },
+
+      error: (error) => {
+        console.error('Error al eliminar cliente:', error);
+        alert('No se pudo eliminar el cliente. Puede tener fiados asociados.');
+      }
+
+    });
+  }
   // =====================================
   // FIADOS
   // =====================================
