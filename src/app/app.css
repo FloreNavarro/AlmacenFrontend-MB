@@ -226,3 +226,39 @@ mat-card {
     width: 100%;
   }
 }
+/* =====================================
+   ESTADOS DE STOCK
+===================================== */
+
+.estado-stock {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Producto disponible */
+.stock-disponible {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Stock bajo */
+.stock-bajo {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* Sin stock */
+.sin-stock {
+  background-color: #fce8e6;
+  color: #b3261e;
+}
+
+/* Stock negativo */
+.stock-negativo {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
