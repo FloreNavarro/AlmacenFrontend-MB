@@ -139,6 +139,35 @@
       <!-- PANTALLA DE PRODUCTOS -->
       @if (opcionSeleccionada === 'Productos') {
       <p>Listado de productos registrados en el almacén.</p>
+      <!-- BUSCADOR Y FILTROS DE PRODUCTOS -->
+<!-- BUSCADOR Y FILTROS -->
+<div class="filtros-productos">
+
+  <label for="buscarProducto">
+    Buscar producto
+    <input
+      id="buscarProducto"
+      type="text"
+      name="busquedaProducto"
+      [(ngModel)]="busquedaProducto"
+      placeholder="Nombre o descripción..."
+    >
+  </label>
+
+  <label for="filtroStock">
+    Filtrar por stock
+    <select
+      id="filtroStock"
+      name="filtroStock"
+      [(ngModel)]="filtroStock"
+    >
+      <option value="todos">Todos los productos</option>
+      <option value="bajo">Stock bajo</option>
+      <option value="sin">Sin stock</option>
+    </select>
+  </label>
+
+</div>
 
       <button mat-raised-button type="button" (click)="abrirFormularioProducto()">
         <mat-icon>add</mat-icon>
@@ -207,7 +236,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (producto of productos; track producto.idProducto) {
+            @for (producto of productosFiltrados; track producto.idProducto) {
             <tr>
               <td>{{ producto.idProducto }}</td>
               <td>{{ producto.nombre }}</td>
