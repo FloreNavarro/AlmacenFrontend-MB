@@ -173,3 +173,92 @@ mat-card {
     padding: 12px;
   }
 }
+/* =====================================
+   BUSCADOR Y FILTROS DE PRODUCTOS
+===================================== */
+
+.filtros-productos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 24px;
+  margin: 20px 0 24px;
+}
+
+.filtros-productos label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.filtros-productos input,
+.filtros-productos select {
+  box-sizing: border-box;
+  height: 42px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.filtros-productos input {
+  width: 300px;
+  max-width: 100%;
+}
+
+.filtros-productos select {
+  width: 220px;
+  max-width: 100%;
+}
+
+/* Adaptación a pantallas pequeñas */
+@media (max-width: 600px) {
+  .filtros-productos {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .filtros-productos input,
+  .filtros-productos select {
+    width: 100%;
+  }
+}
+/* =====================================
+   ESTADOS DE STOCK
+===================================== */
+
+.estado-stock {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Producto disponible */
+.stock-disponible {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Stock bajo */
+.stock-bajo {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* Sin stock */
+.sin-stock {
+  background-color: #fce8e6;
+  color: #b3261e;
+}
+
+/* Stock negativo */
+.stock-negativo {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}

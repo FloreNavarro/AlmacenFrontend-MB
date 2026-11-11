@@ -248,6 +248,35 @@ export class App implements OnInit {
 
   productos: Producto[] = [];
 
+  // BUSCADOR Y FILTROS DE PRODUCTOS
+busquedaProducto = '';
+filtroStock = 'todos';
+
+// LISTADO FILTRADO
+get productosFiltrados(): Producto[] {
+
+  const busqueda = this.busquedaProducto.toLowerCase().trim();
+
+  return this.productos.filter(producto => {
+
+    const coincideBusqueda =
+      producto.nombre.toLowerCase().includes(busqueda) ||
+      (producto.descripcion ?? '').toLowerCase().includes(busqueda);
+
+    let coincideStock = true;
+
+    if (this.filtroStock === 'bajo') {
+      coincideStock = producto.stock <= producto.stockMinimo;
+    }
+
+    if (this.filtroStock === 'sin') {
+      coincideStock = producto.stock <= 0;
+    }
+
+    return coincideBusqueda && coincideStock;
+  });
+}
+
   cargandoProductos = false;
   errorProductos = '';
 
