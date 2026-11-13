@@ -20,6 +20,8 @@ import { MatCardModule } from '@angular/material/card';
 import { Producto, ProductoService } from './producto.service';
 import { Fiado, FiadoService, Cliente } from './fiado.service';
 import { Venta, VentaRequest, VentaService, DetalleVentaResponse } from './venta.service';
+import { Proveedor, ProveedorRequest, ProveedorService } from './proveedor.service';
+
 
 @Component({
   selector: 'app-root',
@@ -47,6 +49,8 @@ export class App implements OnInit {
   private fiadoService = inject(FiadoService);
   private cdr = inject(ChangeDetectorRef);
   private ventaService = inject(VentaService);
+private proveedorService = inject(ProveedorService);
+
   ventas: Venta[] = [];
   ventaSeleccionada: Venta | null = null;
   detallesVentaSeleccionada: DetalleVentaResponse[] = [];
@@ -229,6 +233,11 @@ export class App implements OnInit {
     if (opcion === 'Ventas') {
       this.cargarVentas();
     }
+if (opcion === 'Proveedores') {
+  this.cargarProveedores();
+}
+
+
   }
 
   // =====================================
@@ -757,5 +766,174 @@ get productosFiltrados(): Producto[] {
 
     });
   }
+
+  // =====================================
+  // PROVEEDORES
+  // =====================================
+
+  proveedores: Proveedor[] = [];
+
+  cargandoProveedores = false;
+  errorProveedores = '';
+
+  busquedaProveedor = '';
+  filtroProveedor = 'todos';
+
+  mostrarFormularioProveedor = false;
+  proveedorEnEdicion: number | null = null;
+
+  nuevoProveedor: ProveedorRequest = {
+    cuit: '',
+    razonSocial: '',
+    contacto: '',
+    telefono: '',
+    email: '',
+    direccion: '',
+    activo: true
+  };
+
+  // LISTAR PROVEEDORES
+  cargarProveedores(): void {
+    this.cargandoProveedores = true;
+    this.errorProveedores = '';
+
+    const soloActivos =
+      this.filtroProveedor === 'activos' ? true :
+      this.filtroProveedor === 'inactivos' ? false :
+      undefined;
+
+    this.proveedorService.listar(soloActivos, this.busquedaProveedor)
+      .subscribe({
+        next: (datos) => {
+          this.proveedores = this.filtroProveedor === 'inactivos'
+            ? datos.filter(p => !p.activo)
+            : datos;
+
+          this.cargandoProveedores = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error al cargar proveedores:', error);
+          this.errorProveedores = 'No se pudieron cargar los proveedores.';
+          this.cargandoProveedores = false;
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  // ABRIR FORMULARIO
+  abrirFormularioProveedor(): void {
+    this.proveedorEnEdicion = null;
+
+    this.nuevoProveedor = {
+      cuit: '',
+      razonSocial: '',
+      contacto: '',
+      telefono: '',
+      email: '',
+      direccion: '',
+      activo: true
+    };
+
+    this.mostrarFormularioProveedor = true;
+  }
+
+  // EDITAR PROVEEDOR
+  editarProveedor(proveedor: Proveedor): void {
+    this.proveedorEnEdicion = proveedor.idProveedor;
+
+    this.nuevoProveedor = {
+      cuit: proveedor.cuit,
+      razonSocial: proveedor.razonSocial,
+      contacto: proveedor.contacto,
+      telefono: proveedor.telefono,
+      email: proveedor.email,
+      direccion: proveedor.direccion,
+      activo: proveedor.activo
+    };
+
+    this.mostrarFormularioProveedor = true;
+  }
+
+  // CERRAR FORMULARIO
+  cerrarFormularioProveedor(): void {
+    this.mostrarFormularioProveedor = false;
+    this.proveedorEnEdicion = null;
+  }
+
+  // GUARDAR O ACTUALIZAR
+  guardarProveedor(): void {
+    const p = this.nuevoProveedor;
+
+    if (!/^\d{2}-?\d{8}-?\d{1}$/.test(p.cuit.trim())) {
+      alert('Ingresá un CUIT válido de 11 dígitos.');
+      return;
+    }
+
+    if (!p.razonSocial.trim() || !p.telefono.trim() || !p.email.trim()) {
+      alert('Completá razón social, teléfono y email.');
+      return;
+    }
+
+    if (
+      p.razonSocial.length > 150 ||
+      (p.contacto?.length ?? 0) > 100 ||
+      p.telefono.length > 50 ||
+      p.email.length > 100 ||
+      (p.direccion?.length ?? 0) > 200
+    ) {
+      alert('Uno de los campos supera la longitud permitida.');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email.trim())) {
+      alert('Ingresá un correo electrónico válido.');
+      return;
+    }
+
+    const peticion = this.proveedorEnEdicion !== null
+      ? this.proveedorService.actualizar(this.proveedorEnEdicion, p)
+      : this.proveedorService.crear(p);
+
+    peticion.subscribe({
+      next: () => {
+        alert(this.proveedorEnEdicion !== null
+          ? 'Proveedor actualizado correctamente.'
+          : 'Proveedor registrado correctamente.');
+
+        this.cerrarFormularioProveedor();
+        this.cargarProveedores();
+      },
+      error: (error) => {
+        console.error('Error al guardar proveedor:', error);
+        alert('No se pudo guardar el proveedor. Revisá los datos o si el CUIT ya existe.');
+      }
+    });
+  }
+
+  // DESACTIVAR O REACTIVAR
+  cambiarEstadoProveedor(proveedor: Proveedor): void {
+    const accion = proveedor.activo ? 'desactivar' : 'reactivar';
+
+    if (!confirm(`¿Querés ${accion} a "${proveedor.razonSocial}"?`)) {
+      return;
+    }
+
+    const peticion = proveedor.activo
+      ? this.proveedorService.desactivar(proveedor.idProveedor)
+      : this.proveedorService.reactivar(proveedor.idProveedor);
+
+    peticion.subscribe({
+      next: () => {
+        this.cargarProveedores();
+      },
+      error: (error) => {
+        console.error('Error al cambiar estado:', error);
+        alert('No se pudo cambiar el estado del proveedor.');
+      }
+    });
+  }
+
+
 
 } // FIN DE LA CLASE APP
