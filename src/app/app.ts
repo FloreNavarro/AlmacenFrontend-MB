@@ -223,6 +223,10 @@ private proveedorService = inject(ProveedorService);
   seleccionarOpcion(opcion: string): void {
     this.opcionSeleccionada = opcion;
 
+    if (opcion === 'Inicio') {
+  this.cargarProveedoresDashboard();
+}
+
     if (opcion === 'Productos') {
       this.cargarProductos();
     }
@@ -253,6 +257,8 @@ if (opcion === 'Proveedores') {
     this.cargarClientes();
     this.cargarFiados();
     this.cargarVentas();
+this.cargarProveedoresDashboard();
+
   }
 
   // =====================================
@@ -861,6 +867,35 @@ get productosFiltrados(): Producto[] {
   // =====================================
 
   proveedores: Proveedor[] = [];
+
+proveedoresDashboard: Proveedor[] = [];
+
+
+cargarProveedoresDashboard(): void {
+  this.proveedorService.listar(undefined, '').subscribe({
+    next: (datos) => {
+      this.proveedoresDashboard = datos;
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error('Error al cargar estadísticas de proveedores:', error);
+    }
+  });
+}
+
+
+get totalProveedores(): number {
+  return this.proveedores.length;
+}
+
+get proveedoresActivos(): number {
+  return this.proveedores.filter(p => p.activo).length;
+}
+
+get proveedoresInactivos(): number {
+  return this.proveedores.filter(p => !p.activo).length;
+}
+
 
   cargandoProveedores = false;
   errorProveedores = '';
