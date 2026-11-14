@@ -466,13 +466,24 @@
 
                   <td>{{ fiado.estado }}</td>
 
-                  <td>
-                    <button mat-raised-button type="button" (click)="abrirFormularioPago(fiado)"
-                      [disabled]="fiado.saldo <= 0">
-                      <mat-icon>payments</mat-icon>
-                      Registrar pago
-                    </button>
-                  </td>
+                  
+<td>
+  <button mat-raised-button
+    type="button"
+    (click)="abrirFormularioPago(fiado)"
+    [disabled]="fiado.saldo <= 0">
+    <mat-icon>payments</mat-icon>
+    Registrar pago
+  </button>
+
+  <button mat-stroked-button
+    type="button"
+    (click)="abrirHistorialPagos(fiado)">
+    <mat-icon>history</mat-icon>
+    Ver historial
+  </button>
+</td>
+
                 </tr>
                 } @empty {
                 <tr>
@@ -491,6 +502,115 @@
         </mat-card-content>
 
       </mat-card>
+
+
+<!-- HISTORIAL DE PAGOS -->
+@if (mostrarHistorialPagos && fiadoHistorial) {
+
+<mat-card>
+
+  <mat-card-header>
+    <mat-card-title>
+      Historial de pagos - Fiado N.º {{ fiadoHistorial.idFiado }}
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <p>
+      <strong>Cliente:</strong>
+      {{ fiadoHistorial.cliente.nombre }}
+      {{ fiadoHistorial.cliente.apellido }}
+    </p>
+
+    <p>
+      <strong>Monto original:</strong>
+      {{ fiadoHistorial.montoTotal | currency:'ARS':'symbol':'1.2-2' }}
+    </p>
+
+    <p>
+      <strong>Total pagado:</strong>
+      {{ totalPagadoHistorial | currency:'ARS':'symbol':'1.2-2' }}
+    </p>
+
+    <p>
+      <strong>Saldo pendiente:</strong>
+      {{ fiadoHistorial.saldo | currency:'ARS':'symbol':'1.2-2' }}
+    </p>
+
+    <p>
+      <strong>Estado:</strong>
+      {{ fiadoHistorial.estado }}
+    </p>
+
+    @if (cargandoHistorial) {
+      <p>Cargando historial de pagos...</p>
+    }
+
+    @if (errorHistorial) {
+      <p>{{ errorHistorial }}</p>
+    }
+
+    @if (!cargandoHistorial && !errorHistorial) {
+
+      <div class="tabla-contenedor">
+
+        <table class="tabla-productos">
+
+          <thead>
+            <tr>
+              <th>ID Pago</th>
+              <th>Fecha</th>
+              <th>Importe</th>
+              <th>Saldo posterior</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (pago of historialPagos; track pago.idPago; let i = $index) {
+              <tr>
+                <td>{{ pago.idPago }}</td>
+
+                <td>
+                  {{ pago.fecha | date:'dd/MM/yyyy HH:mm' }}
+                </td>
+
+                <td>
+                  {{ pago.importe | currency:'ARS':'symbol':'1.2-2' }}
+                </td>
+
+                <td>
+                  {{ saldoPosteriorPago(i) | currency:'ARS':'symbol':'1.2-2' }}
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4">
+                  Este fiado todavía no tiene pagos registrados.
+                </td>
+              </tr>
+            }
+          </tbody>
+
+        </table>
+
+      </div>
+    }
+
+    <button mat-button
+      type="button"
+      (click)="cerrarHistorialPagos()">
+      <mat-icon>close</mat-icon>
+      Cerrar historial
+    </button>
+
+  </mat-card-content>
+
+</mat-card>
+
+}
+
+
       }
       <!-- PANTALLA DE CLIENTES -->
       @if (opcionSeleccionada === 'Clientes') {

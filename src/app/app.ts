@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { DecimalPipe } from '@angular/common';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -18,24 +17,29 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 import { Producto, ProductoService } from './producto.service';
-import { Fiado, FiadoService, Cliente } from './fiado.service';
+import { Fiado, FiadoService, Cliente, Pago } from './fiado.service';
 import { Venta, VentaRequest, VentaService, DetalleVentaResponse } from './venta.service';
 import { Proveedor, ProveedorRequest, ProveedorService } from './proveedor.service';
+import { DecimalPipe, DatePipe, CurrencyPipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-    FormsModule,
-    DecimalPipe
-  ],
+  
+imports: [
+  MatToolbarModule,
+  MatSidenavModule,
+  MatListModule,
+  MatIconModule,
+  MatButtonModule,
+  MatCardModule,
+  FormsModule,
+  DecimalPipe,
+  DatePipe,
+  CurrencyPipe
+],
+
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -766,6 +770,91 @@ get productosFiltrados(): Producto[] {
 
     });
   }
+
+
+  // =====================================
+  // HISTORIAL DE PAGOS DE FIADOS
+  // =====================================
+
+  mostrarHistorialPagos = false;
+
+  fiadoHistorial: Fiado | null = null;
+
+  historialPagos: Pago[] = [];
+
+  cargandoHistorial = false;
+  errorHistorial = '';
+
+  abrirHistorialPagos(fiado: Fiado): void {
+
+    this.fiadoHistorial = fiado;
+    this.historialPagos = [];
+    this.errorHistorial = '';
+    this.mostrarHistorialPagos = true;
+    this.cargandoHistorial = true;
+
+    this.fiadoService.obtenerHistorialPagos(
+      fiado.idFiado
+    ).subscribe({
+
+      next: (pagos) => {
+        this.historialPagos = [...pagos].sort(
+          (a, b) =>
+            new Date(a.fecha).getTime() -
+            new Date(b.fecha).getTime()
+            || a.idPago - b.idPago
+        );
+
+        this.cargandoHistorial = false;
+        this.cdr.detectChanges();
+      },
+
+      error: (error) => {
+        console.error(
+          'Error al consultar historial:',
+          error
+        );
+
+        this.errorHistorial =
+          'No se pudo cargar el historial de pagos.';
+
+        this.cargandoHistorial = false;
+        this.cdr.detectChanges();
+      }
+
+    });
+  }
+
+  cerrarHistorialPagos(): void {
+    this.mostrarHistorialPagos = false;
+    this.fiadoHistorial = null;
+    this.historialPagos = [];
+    this.errorHistorial = '';
+  }
+
+  get totalPagadoHistorial(): number {
+    return this.historialPagos.reduce(
+      (total, pago) => total + pago.importe,
+      0
+    );
+  }
+
+  saldoPosteriorPago(indice: number): number {
+    if (!this.fiadoHistorial) {
+      return 0;
+    }
+
+    const totalHastaEsePago = this.historialPagos
+      .slice(0, indice + 1)
+      .reduce(
+        (total, pago) => total + pago.importe,
+        0
+      );
+
+    return this.fiadoHistorial.montoTotal -
+      totalHastaEsePago;
+  }
+
 
   // =====================================
   // PROVEEDORES

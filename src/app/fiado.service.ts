@@ -2,6 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
+export interface Pago {
+  idPago: number;
+  fecha: string;
+  importe: number;
+  fiado: Fiado;
+}
+
+
+
 export interface Fiado {
   idFiado: number;
   cliente: {
@@ -83,6 +93,15 @@ registrarPago(
     { importe }
   );
 }
+
+
+  // CONSULTAR HISTORIAL DE PAGOS
+  obtenerHistorialPagos(idFiado: number): Observable<Pago[]> {
+    return this.http.get<Pago[]>(
+      `${this.apiUrl}/${idFiado}/pagos`
+    );
+  }
+
 
 // ELIMINAR CLIENTE
 eliminarCliente(idCliente: number): Observable<void> {
