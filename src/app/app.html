@@ -466,13 +466,24 @@
 
                   <td>{{ fiado.estado }}</td>
 
-                  <td>
-                    <button mat-raised-button type="button" (click)="abrirFormularioPago(fiado)"
-                      [disabled]="fiado.saldo <= 0">
-                      <mat-icon>payments</mat-icon>
-                      Registrar pago
-                    </button>
-                  </td>
+                  
+<td>
+  <button mat-raised-button
+    type="button"
+    (click)="abrirFormularioPago(fiado)"
+    [disabled]="fiado.saldo <= 0">
+    <mat-icon>payments</mat-icon>
+    Registrar pago
+  </button>
+
+  <button mat-stroked-button
+    type="button"
+    (click)="abrirHistorialPagos(fiado)">
+    <mat-icon>history</mat-icon>
+    Ver historial
+  </button>
+</td>
+
                 </tr>
                 } @empty {
                 <tr>
@@ -491,6 +502,115 @@
         </mat-card-content>
 
       </mat-card>
+
+
+<!-- HISTORIAL DE PAGOS -->
+@if (mostrarHistorialPagos && fiadoHistorial) {
+
+<mat-card>
+
+  <mat-card-header>
+    <mat-card-title>
+      Historial de pagos - Fiado N.º {{ fiadoHistorial.idFiado }}
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <p>
+      <strong>Cliente:</strong>
+      {{ fiadoHistorial.cliente.nombre }}
+      {{ fiadoHistorial.cliente.apellido }}
+    </p>
+
+    <p>
+      <strong>Monto original:</strong>
+      {{ fiadoHistorial.montoTotal | currency:'ARS':'symbol':'1.2-2' }}
+    </p>
+
+    <p>
+      <strong>Total pagado:</strong>
+      {{ totalPagadoHistorial | currency:'ARS':'symbol':'1.2-2' }}
+    </p>
+
+    <p>
+      <strong>Saldo pendiente:</strong>
+      {{ fiadoHistorial.saldo | currency:'ARS':'symbol':'1.2-2' }}
+    </p>
+
+    <p>
+      <strong>Estado:</strong>
+      {{ fiadoHistorial.estado }}
+    </p>
+
+    @if (cargandoHistorial) {
+      <p>Cargando historial de pagos...</p>
+    }
+
+    @if (errorHistorial) {
+      <p>{{ errorHistorial }}</p>
+    }
+
+    @if (!cargandoHistorial && !errorHistorial) {
+
+      <div class="tabla-contenedor">
+
+        <table class="tabla-productos">
+
+          <thead>
+            <tr>
+              <th>ID Pago</th>
+              <th>Fecha</th>
+              <th>Importe</th>
+              <th>Saldo posterior</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (pago of historialPagos; track pago.idPago; let i = $index) {
+              <tr>
+                <td>{{ pago.idPago }}</td>
+
+                <td>
+                  {{ pago.fecha | date:'dd/MM/yyyy HH:mm' }}
+                </td>
+
+                <td>
+                  {{ pago.importe | currency:'ARS':'symbol':'1.2-2' }}
+                </td>
+
+                <td>
+                  {{ saldoPosteriorPago(i) | currency:'ARS':'symbol':'1.2-2' }}
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4">
+                  Este fiado todavía no tiene pagos registrados.
+                </td>
+              </tr>
+            }
+          </tbody>
+
+        </table>
+
+      </div>
+    }
+
+    <button mat-button
+      type="button"
+      (click)="cerrarHistorialPagos()">
+      <mat-icon>close</mat-icon>
+      Cerrar historial
+    </button>
+
+  </mat-card-content>
+
+</mat-card>
+
+}
+
+
       }
       <!-- PANTALLA DE CLIENTES -->
       @if (opcionSeleccionada === 'Clientes') {
@@ -865,13 +985,206 @@
         </mat-card-content>
       </mat-card>
       }
-      <!-- OTRAS SECCIONES -->
-      @if (opcionSeleccionada !== 'Inicio' &&
-      opcionSeleccionada !== 'Productos' &&
-      opcionSeleccionada !== 'Fiados' &&
-      opcionSeleccionada !== 'Clientes' &&
-      opcionSeleccionada !== 'Ventas') {
 
+<!-- PANTALLA DE PROVEEDORES -->
+@if (opcionSeleccionada === 'Proveedores') {
+
+  <p>Gestión de proveedores del almacén.</p>
+
+  <div class="filtros-productos">
+    <label>
+      Buscar proveedor
+      <input
+        type="text"
+        name="busquedaProveedor"
+        [(ngModel)]="busquedaProveedor"
+        (ngModelChange)="cargarProveedores()"
+        placeholder="Buscar proveedor...">
+    </label>
+
+    <label>
+      Filtrar por estado
+      <select
+        name="filtroProveedor"
+        [(ngModel)]="filtroProveedor"
+        (ngModelChange)="cargarProveedores()">
+        <option value="todos">Todos</option>
+        <option value="activos">Activos</option>
+        <option value="inactivos">Inactivos</option>
+      </select>
+    </label>
+  </div>
+
+  <button mat-raised-button type="button"
+          (click)="abrirFormularioProveedor()">
+    <mat-icon>add</mat-icon>
+    Agregar proveedor
+  </button>
+
+  @if (mostrarFormularioProveedor) {
+    <mat-card class="formulario-producto">
+      <mat-card-header>
+        <mat-card-title>
+          {{ proveedorEnEdicion !== null
+             ? 'Editar proveedor'
+             : 'Registrar nuevo proveedor' }}
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form #formProveedor="ngForm">
+          <div class="campos-producto">
+
+            <label>CUIT:
+              <input type="text" name="cuitProveedor"
+                     [(ngModel)]="nuevoProveedor.cuit"
+                     maxlength="13"
+                     pattern="[0-9]{2}-?[0-9]{8}-?[0-9]{1}"
+                     required>
+            </label>
+
+            <label>Razón social:
+              <input type="text" name="razonSocialProveedor"
+                     [(ngModel)]="nuevoProveedor.razonSocial"
+                     maxlength="150" required>
+            </label>
+
+            <label>Contacto:
+              <input type="text" name="contactoProveedor"
+                     [(ngModel)]="nuevoProveedor.contacto"
+                     maxlength="100">
+            </label>
+
+            <label>Teléfono:
+              <input type="text" name="telefonoProveedor"
+                     [(ngModel)]="nuevoProveedor.telefono"
+                     maxlength="50" required>
+            </label>
+
+            <label>Email:
+              <input type="email" name="emailProveedor"
+                     [(ngModel)]="nuevoProveedor.email"
+                     maxlength="100" required email>
+            </label>
+
+            <label>Dirección:
+              <input type="text" name="direccionProveedor"
+                     [(ngModel)]="nuevoProveedor.direccion"
+                     maxlength="200">
+            </label>
+
+            <label>Estado:
+              <select name="activoProveedor"
+                      [(ngModel)]="nuevoProveedor.activo">
+                <option [ngValue]="true">Activo</option>
+                <option [ngValue]="false">Inactivo</option>
+              </select>
+            </label>
+
+          </div>
+
+          <div class="acciones-formulario">
+            <button mat-raised-button type="button"
+                    (click)="guardarProveedor()"
+                    [disabled]="formProveedor.invalid">
+              <mat-icon>save</mat-icon>
+              Guardar proveedor
+            </button>
+
+            <button mat-button type="button"
+                    (click)="cerrarFormularioProveedor()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (cargandoProveedores) {
+    <p>Cargando proveedores...</p>
+  }
+
+  @if (errorProveedores) {
+    <p>{{ errorProveedores }}</p>
+  }
+
+  @if (!cargandoProveedores && !errorProveedores) {
+    <div class="tabla-contenedor">
+      <table class="tabla-productos">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Razón social</th>
+            <th>CUIT</th>
+            <th>Contacto</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Dirección</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (proveedor of proveedores; track proveedor.idProveedor) {
+            <tr>
+              <td>{{ proveedor.idProveedor }}</td>
+              <td>{{ proveedor.razonSocial }}</td>
+              <td>{{ proveedor.cuit }}</td>
+              <td>{{ proveedor.contacto }}</td>
+              <td>{{ proveedor.telefono }}</td>
+              <td>{{ proveedor.email }}</td>
+              <td>{{ proveedor.direccion }}</td>
+
+              <td>
+                @if (proveedor.activo) {
+                  <span class="estado-stock stock-disponible">
+                    Activo
+                  </span>
+                } @else {
+                  <span class="estado-stock sin-stock">
+                    Inactivo
+                  </span>
+                }
+              </td>
+
+              <td>
+                <button mat-button type="button"
+                        (click)="editarProveedor(proveedor)">
+                  <mat-icon>edit</mat-icon>
+                  Editar
+                </button>
+
+                <button mat-button type="button"
+                        (click)="cambiarEstadoProveedor(proveedor)">
+                  <mat-icon>
+                    {{ proveedor.activo ? 'block' : 'check_circle' }}
+                  </mat-icon>
+                  {{ proveedor.activo ? 'Desactivar' : 'Reactivar' }}
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="9">No hay proveedores para mostrar.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+
+
+      <!-- OTRAS SECCIONES -->
+     @if (opcionSeleccionada !== 'Inicio' &&
+    opcionSeleccionada !== 'Productos' &&
+    opcionSeleccionada !== 'Fiados' &&
+    opcionSeleccionada !== 'Clientes' &&
+    opcionSeleccionada !== 'Ventas' &&
+    opcionSeleccionada !== 'Proveedores') {
       <p>Sección {{ opcionSeleccionada }}.</p>
       <p>Próximamente incorporaremos sus funcionalidades.</p>
 
