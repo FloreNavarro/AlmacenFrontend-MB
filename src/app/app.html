@@ -49,6 +49,18 @@
         <span matListItemTitle>Reportes</span>
       </button>
 
+
+<!-- CONFIGURACIÓN -->
+<button mat-list-item type="button"
+        (click)="seleccionarOpcion('Configuración')"
+        [class.seleccionado]="opcionSeleccionada === 'Configuración'">
+
+  <mat-icon matListItemIcon>settings</mat-icon>
+  <span matListItemTitle>Configuración</span>
+
+</button>
+
+
     </mat-nav-list>
 
   </mat-sidenav>
@@ -1358,8 +1370,79 @@
 
 }
 
+<!-- PANTALLA DE CONFIGURACIÓN -->
+@if (opcionSeleccionada === 'Configuración') {
+
+  <div class="configuracion-contenedor">
+
+    <h2>Configuración del sistema</h2>
+
+    <p>
+      Personalizá la apariencia de Almacén
+      para trabajar de manera más cómoda.
+    </p>
+
+    <mat-card class="configuracion-card">
+
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>palette</mat-icon>
+          Apariencia
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <p>
+          Seleccioná el tema visual que prefieras:
+        </p>
+
+      
+<div class="opciones-tema">
+
+  <button mat-stroked-button type="button"
+          (click)="cambiarTema('claro')">
+    <mat-icon>light_mode</mat-icon>
+    Claro
+  </button>
+
+  <button mat-stroked-button type="button"
+          (click)="cambiarTema('oscuro')">
+    <mat-icon>dark_mode</mat-icon>
+    Oscuro
+  </button>
+
+  <button mat-stroked-button type="button"
+          (click)="cambiarTema('gris')">
+    <mat-icon>contrast</mat-icon>
+    Gris suave
+  </button>
+
+  <button mat-stroked-button type="button"
+          (click)="cambiarTema('azul')">
+    <mat-icon>water_drop</mat-icon>
+    Azul suave
+  </button>
+
+</div>
+
+<p>
+  Tema seleccionado: {{ temaSeleccionado }}
+</p>
+
+      </mat-card-content>
+
+    </mat-card>
+
+  </div>
+
+}
+
 
     
+<!-- OTRAS SECCIONES -->
+
+
 <!-- OTRAS SECCIONES -->
 @if (opcionSeleccionada !== 'Inicio' &&
     opcionSeleccionada !== 'Productos' &&
@@ -1367,7 +1450,8 @@
     opcionSeleccionada !== 'Clientes' &&
     opcionSeleccionada !== 'Ventas' &&
     opcionSeleccionada !== 'Proveedores' &&
-    opcionSeleccionada !== 'Reportes') {
+    opcionSeleccionada !== 'Reportes' &&
+    opcionSeleccionada !== 'Configuración') {
 
   <p>Sección {{ opcionSeleccionada }}.</p>
   <p>Próximamente incorporaremos sus funcionalidades.</p>
