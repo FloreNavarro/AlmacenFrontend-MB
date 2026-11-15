@@ -253,14 +253,31 @@ if (opcion === 'Proveedores') {
   // INICIALIZACIÓN
   // =====================================
 
-  ngOnInit(): void {
-    this.cargarProductos();
-    this.cargarClientes();
-    this.cargarFiados();
-    this.cargarVentas();
-this.cargarProveedoresDashboard();
+ 
+ngOnInit(): void {
 
+  // Recuperar el tema elegido anteriormente
+  const temaGuardado = localStorage.getItem('tema-almacen');
+
+  if (
+    temaGuardado === 'claro' ||
+    temaGuardado === 'oscuro' ||
+    temaGuardado === 'gris' ||
+    temaGuardado === 'azul'
+  ) {
+    this.cambiarTema(temaGuardado);
+  } else {
+    this.cambiarTema('claro');
   }
+
+  // Cargar los datos del sistema
+  this.cargarProductos();
+  this.cargarClientes();
+  this.cargarFiados();
+  this.cargarVentas();
+  this.cargarProveedoresDashboard();
+}
+
 
   // =====================================
   // PRODUCTOS
@@ -1118,6 +1135,23 @@ get proveedoresInactivos(): number {
       }
     });
   }
+   // Tema visual seleccionado
+  temaSeleccionado: string = 'claro';
+
+  // Cambiar el tema
+ 
+cambiarTema(tema: string): void {
+
+  console.log('Tema seleccionado:', tema);
+
+  this.temaSeleccionado = tema;
+
+  document.documentElement.setAttribute('data-tema', tema);
+
+  localStorage.setItem('tema-almacen', tema);
+
+  this.cdr.detectChanges();
+}
 
 
 } // FIN DE LA CLASE APP

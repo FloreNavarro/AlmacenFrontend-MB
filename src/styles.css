@@ -1,1 +1,207 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* TEMA CLARO */
+:root,
+:root[data-tema="claro"] {
+  --fondo: #ffffff;
+  --superficie: #ffffff;
+  --menu-fondo: #f5f5f5;
+  --texto: #212121;
+  --texto-secundario: #666666;
+  --borde: #dddddd;
+  --encabezado-tabla: #e3f2fd;
+  --fila-hover: #f5f5f5;
+  --seleccionado: #dbe8ff;
+  --color-primario: #1976d2;
+}
+
+/* TEMA OSCURO */
+:root[data-tema="oscuro"] {
+  color-scheme: dark;
+  --fondo: #151b23;
+  --superficie: #242d38;
+  --menu-fondo: #1c2530;
+  --texto: #f1f5f9;
+  --texto-secundario: #b5c0ce;
+  --borde: #455363;
+  --encabezado-tabla: #303e50;
+  --fila-hover: #354355;
+  --seleccionado: #344b68;
+  --color-primario: #90caf9;
+}
+
+/* TEMA GRIS SUAVE */
+:root[data-tema="gris"] {
+  --fondo: #e8eaed;
+  --superficie: #f5f6f7;
+  --menu-fondo: #dfe3e8;
+  --texto: #263238;
+  --texto-secundario: #546e7a;
+  --borde: #c5cbd3;
+  --encabezado-tabla: #d8dee5;
+  --fila-hover: #e2e6eb;
+  --seleccionado: #c7d7e8;
+  --color-primario: #455a64;
+}
+
+/* TEMA AZUL SUAVE */
+:root[data-tema="azul"] {
+  --fondo: #e8f0f7;
+  --superficie: #f7fbff;
+  --menu-fondo: #dbe8f3;
+  --texto: #243746;
+  --texto-secundario: #607d8b;
+  --borde: #c5d6e5;
+  --encabezado-tabla: #d5e7f5;
+  --fila-hover: #e2eef8;
+  --seleccionado: #c2dcf2;
+  --color-primario: #1976d2;
+}
+
+/* APLICAR COLORES A LA PANTALLA */
+html,
+body,
+.mat-drawer-container,
+.mat-drawer-content {
+  background-color: var(--fondo);
+  color: var(--texto);
+}
+
+.mat-drawer {
+  background-color: var(--menu-fondo);
+  color: var(--texto);
+}
+
+/* CORREGIR TEXTOS EN TEMA OSCURO */
+
+:root[data-tema="oscuro"] {
+  color-scheme: dark;
+}
+
+:root[data-tema="oscuro"] body,
+:root[data-tema="oscuro"] .contenido,
+:root[data-tema="oscuro"] .sidenav,
+:root[data-tema="oscuro"] .mat-drawer-container,
+:root[data-tema="oscuro"] .mat-drawer-content {
+  color: var(--texto);
+}
+
+/* Textos de botones del menú lateral */
+:root[data-tema="oscuro"] .mat-mdc-list-item {
+  --mdc-list-list-item-label-text-color: var(--texto);
+  --mdc-list-list-item-leading-icon-color: var(--texto);
+}
+
+/* Tarjetas de Angular Material */
+:root[data-tema="oscuro"] .mat-mdc-card {
+  background-color: var(--superficie);
+  color: var(--texto);
+}
+
+/* CORRECCIÓN EXCLUSIVA DEL TEMA OSCURO */
+
+:root[data-tema="oscuro"] .contenido,
+:root[data-tema="oscuro"] .sidenav,
+:root[data-tema="oscuro"] .tabla-productos,
+:root[data-tema="oscuro"] .tabla-productos th,
+:root[data-tema="oscuro"] .tabla-productos td,
+:root[data-tema="oscuro"] .dashboard-card {
+  color: #f1f5f9;
+}
+
+/* Tablas */
+:root[data-tema="oscuro"] table {
+  background-color: #242d38;
+  color: #f1f5f9;
+}
+
+:root[data-tema="oscuro"] th {
+  background-color: #303e50;
+  color: #ffffff;
+}
+
+:root[data-tema="oscuro"] td {
+  background-color: #242d38;
+  color: #f1f5f9;
+}
+
+/* Tarjetas */
+:root[data-tema="oscuro"] .mat-mdc-card {
+  background-color: #242d38;
+  color: #f1f5f9;
+}
+
+/* Títulos y textos */
+:root[data-tema="oscuro"] h1,
+:root[data-tema="oscuro"] h2,
+:root[data-tema="oscuro"] h3,
+:root[data-tema="oscuro"] p,
+:root[data-tema="oscuro"] label {
+  color: #f1f5f9;
+}
+
+/* Botones y menú */
+:root[data-tema="oscuro"] .mat-mdc-button,
+:root[data-tema="oscuro"] .mat-mdc-outlined-button,
+:root[data-tema="oscuro"] .mat-mdc-list-item {
+  color: #f1f5f9;
+}
+
+/* =====================================
+   TEMA OSCURO - MENÚ LATERAL
+===================================== */
+
+/* Letras e íconos del menú */
+:root[data-tema="oscuro"] .sidenav .mat-mdc-list-item {
+  --mdc-list-list-item-label-text-color: #ffffff;
+  --mdc-list-list-item-leading-icon-color: #ffffff;
+
+  color: #ffffff !important;
+}
+
+/* Texto interno de los botones */
+:root[data-tema="oscuro"] .sidenav .mdc-list-item__primary-text,
+:root[data-tema="oscuro"] .sidenav .mat-mdc-list-item-title {
+  color: #ffffff !important;
+}
+
+/* Íconos del menú */
+:root[data-tema="oscuro"] .sidenav mat-icon {
+  color: #ffffff !important;
+}
+
+/* Botón seleccionado */
+:root[data-tema="oscuro"] .sidenav button.seleccionado {
+  background-color: #344b68;
+  color: #ffffff !important;
+}
+
+/* =====================================
+   TEMA OSCURO - TARJETAS DEL DASHBOARD
+===================================== */
+
+/* Todas las tarjetas */
+:root[data-tema="oscuro"] .dashboard-card {
+  background-color: #242d38 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Tarjetas al pasar el mouse */
+:root[data-tema="oscuro"] .dashboard-card:hover {
+  background-color: #344b68 !important;
+}
+
+/* Textos de las tarjetas */
+:root[data-tema="oscuro"] .dashboard-card h2,
+:root[data-tema="oscuro"] .dashboard-card h3,
+:root[data-tema="oscuro"] .dashboard-card p,
+:root[data-tema="oscuro"] .dashboard-card span {
+  color: #f1f5f9 !important;
+}
+
+/* Números destacados */
+:root[data-tema="oscuro"] .dashboard-card .mat-icon,
+:root[data-tema="oscuro"] .dashboard-card mat-icon {
+  color: #90caf9 !important;
+}
+
