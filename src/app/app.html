@@ -72,82 +72,140 @@
 
       <h1>{{ opcionSeleccionada }}</h1>
 
-      <!-- PANTALLA DE INICIO -->
-      @if (opcionSeleccionada === 'Inicio') {
 
-      <p>Bienvenido al sistema de Gestión de Almacén.</p>
+<!-- PANTALLA DE INICIO -->
+@if (opcionSeleccionada === 'Inicio') {
 
-      <div class="tarjetas">
+  <p>Resumen general del sistema de Gestión de Almacén.</p>
 
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Productos</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>Total de productos: {{ productos.length }}</p>
-          </mat-card-content>
-        </mat-card>
+  <div class="tarjetas dashboard-tarjetas">
 
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Ventas</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>Datos de demostración</p>
-          </mat-card-content>
-        </mat-card>
+    <!-- PRODUCTOS -->
+   
+<mat-card
+  class="dashboard-card dashboard-card-clickable"
+  role="button"
+  tabindex="0"
+  (click)="seleccionarOpcion('Productos')"
+  (keydown.enter)="seleccionarOpcion('Productos')"
+  (keydown.space)="$event.preventDefault(); seleccionarOpcion('Productos')">
 
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Clientes</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>Total de clientes: {{ clientes.length }}</p>
-          </mat-card-content>
-        </mat-card>
+      <mat-card-header>
+        <mat-icon>inventory_2</mat-icon>
+        <mat-card-title>Productos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ productos.length }}</h2>
+        <p>Productos registrados</p>
+      </mat-card-content>
+    </mat-card>
 
-        
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Proveedores</mat-card-title>
-  </mat-card-header>
+    <!-- VENTAS -->
+    
+<mat-card
+  class="dashboard-card dashboard-card-clickable"
+  role="button"
+  tabindex="0"
+  (click)="seleccionarOpcion('Ventas')"
+  (keydown.enter)="seleccionarOpcion('Ventas')"
+  (keydown.space)="$event.preventDefault(); seleccionarOpcion('Ventas')">
 
-  <mat-card-content>
-    <h2>{{ totalProveedores }}</h2>
-    <p>Proveedores registrados</p>
+      <mat-card-header>
+        <mat-icon>shopping_cart</mat-icon>
+        <mat-card-title>Ventas</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ ventas.length }}</h2>
+        <p>Ventas registradas</p>
+      </mat-card-content>
+    </mat-card>
 
-    <p>
-      <strong>Activos:</strong>
-      {{ proveedoresActivos }}
-    </p>
+    <!-- CLIENTES -->
+    
+<mat-card
+  class="dashboard-card dashboard-card-clickable"
+  role="button"
+  tabindex="0"
+  (click)="seleccionarOpcion('Clientes')"
+  (keydown.enter)="seleccionarOpcion('Clientes')"
+  (keydown.space)="$event.preventDefault(); seleccionarOpcion('Clientes')">
 
-    <p>
-      <strong>Inactivos:</strong>
-      {{ proveedoresInactivos }}
-    </p>
-  </mat-card-content>
-</mat-card>
+      <mat-card-header>
+        <mat-icon>people</mat-icon>
+        <mat-card-title>Clientes</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ clientes.length }}</h2>
+        <p>Clientes registrados</p>
+      </mat-card-content>
+    </mat-card>
 
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Fiados</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>Fiados pendientes: {{ cantidadFiadosPendientes }}</p>
-          </mat-card-content>
-        </mat-card>
+    <!-- PROVEEDORES -->
+    
+<mat-card
+  class="dashboard-card dashboard-card-clickable"
+  role="button"
+  tabindex="0"
+  (click)="seleccionarOpcion('Proveedores')"
+  (keydown.enter)="seleccionarOpcion('Proveedores')"
+  (keydown.space)="$event.preventDefault(); seleccionarOpcion('Proveedores')">
 
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Reportes</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>Datos de demostración</p>
-          </mat-card-content>
-        </mat-card>
+      <mat-card-header>
+        <mat-icon>local_shipping</mat-icon>
+        <mat-card-title>Proveedores</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ proveedoresDashboard.length }}</h2>
+        <p>Proveedores registrados</p>
+        <p>
+          Activos:
+          {{ proveedoresDashboardActivos }}
+        </p>
+      </mat-card-content>
+    </mat-card>
 
-      </div>
-      }
+    <!-- FIADOS -->
+    
+<mat-card
+  class="dashboard-card dashboard-card-clickable"
+  role="button"
+  tabindex="0"
+  (click)="seleccionarOpcion('Fiados')"
+  (keydown.enter)="seleccionarOpcion('Fiados')"
+  (keydown.space)="$event.preventDefault(); seleccionarOpcion('Fiados')">
+
+      <mat-card-header>
+        <mat-icon>receipt_long</mat-icon>
+        <mat-card-title>Fiados</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ cantidadFiadosPendientes }}</h2>
+        <p>Fiados pendientes</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- REPORTES -->
+   
+<mat-card
+  class="dashboard-card dashboard-card-clickable"
+  role="button"
+  tabindex="0"
+  (click)="seleccionarOpcion('Reportes')"
+  (keydown.enter)="seleccionarOpcion('Reportes')"
+  (keydown.space)="$event.preventDefault(); seleccionarOpcion('Reportes')">
+
+      <mat-card-header>
+        <mat-icon>bar_chart</mat-icon>
+        <mat-card-title>Reportes</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ reporteVentas?.cantidadVentas ?? '—' }}</h2>
+        <p>Ventas del último reporte consultado</p>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+}
 
       <!-- PANTALLA DE PRODUCTOS -->
       @if (opcionSeleccionada === 'Productos') {
@@ -1190,18 +1248,131 @@
 }
 
 
+<!-- PANTALLA DE REPORTES -->
+@if (opcionSeleccionada === 'Reportes') {
 
-      <!-- OTRAS SECCIONES -->
-     @if (opcionSeleccionada !== 'Inicio' &&
+  <p>Consultá las estadísticas de ventas del almacén.</p>
+
+  <mat-card class="formulario-producto">
+
+    <mat-card-header>
+      <mat-card-title>
+        Reporte de ventas por fecha
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div class="campos-producto">
+
+        <label>
+          Fecha desde:
+          <input
+            type="date"
+            name="fechaDesdeReporte"
+            [(ngModel)]="fechaDesdeReporte">
+        </label>
+
+        <label>
+          Fecha hasta:
+          <input
+            type="date"
+            name="fechaHastaReporte"
+            [(ngModel)]="fechaHastaReporte">
+        </label>
+
+      </div>
+
+      <div class="acciones-formulario">
+        <button
+          mat-raised-button
+          type="button"
+          (click)="generarReporteVentas()">
+
+          <mat-icon>assessment</mat-icon>
+          Generar reporte
+
+        </button>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  @if (cargandoReporte) {
+    <p>Generando reporte...</p>
+  }
+
+  @if (errorReporte) {
+    <p>{{ errorReporte }}</p>
+  }
+
+  @if (reporteVentas) {
+
+    <div class="tarjetas">
+
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Total vendido
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <h2>
+            {{ reporteVentas.totalVendido
+               | currency:'ARS':'symbol':'1.2-2' }}
+          </h2>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Cantidad de ventas
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <h2>{{ reporteVentas.cantidadVentas }}</h2>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Promedio por venta
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <h2>
+            {{ reporteVentas.promedioVenta
+               | currency:'ARS':'symbol':'1.2-2' }}
+          </h2>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+
+  }
+
+}
+
+
+    
+<!-- OTRAS SECCIONES -->
+@if (opcionSeleccionada !== 'Inicio' &&
     opcionSeleccionada !== 'Productos' &&
     opcionSeleccionada !== 'Fiados' &&
     opcionSeleccionada !== 'Clientes' &&
     opcionSeleccionada !== 'Ventas' &&
-    opcionSeleccionada !== 'Proveedores') {
-      <p>Sección {{ opcionSeleccionada }}.</p>
-      <p>Próximamente incorporaremos sus funcionalidades.</p>
+    opcionSeleccionada !== 'Proveedores' &&
+    opcionSeleccionada !== 'Reportes') {
 
-      }
+  <p>Sección {{ opcionSeleccionada }}.</p>
+  <p>Próximamente incorporaremos sus funcionalidades.</p>
+
+}
 
     </main>
 

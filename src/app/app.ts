@@ -21,7 +21,7 @@ import { Fiado, FiadoService, Cliente, Pago } from './fiado.service';
 import { Venta, VentaRequest, VentaService, DetalleVentaResponse } from './venta.service';
 import { Proveedor, ProveedorRequest, ProveedorService } from './proveedor.service';
 import { DecimalPipe, DatePipe, CurrencyPipe } from '@angular/common';
-
+import { ReporteService, ReporteVentas } from './reporte.service';
 
 @Component({
   selector: 'app-root',
@@ -54,6 +54,7 @@ export class App implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private ventaService = inject(VentaService);
 private proveedorService = inject(ProveedorService);
+private reporteService = inject(ReporteService);
 
   ventas: Venta[] = [];
   ventaSeleccionada: Venta | null = null;
@@ -870,6 +871,11 @@ get productosFiltrados(): Producto[] {
 
 proveedoresDashboard: Proveedor[] = [];
 
+get proveedoresDashboardActivos(): number {
+  return this.proveedoresDashboard.filter(
+    proveedor => proveedor.activo
+  ).length;
+}
 
 cargarProveedoresDashboard(): void {
   this.proveedorService.listar(undefined, '').subscribe({
@@ -1058,6 +1064,60 @@ get proveedoresInactivos(): number {
     });
   }
 
+
+  // =====================================
+  // REPORTES DE VENTAS
+  // =====================================
+
+  fechaDesdeReporte = '2026-11-01';
+  fechaHastaReporte = '2026-11-14';
+
+  reporteVentas: ReporteVentas | null = null;
+
+  cargandoReporte = false;
+  errorReporte = '';
+
+  generarReporteVentas(): void {
+
+    if (!this.fechaDesdeReporte || !this.fechaHastaReporte) {
+      this.errorReporte = 'Seleccioná las dos fechas.';
+      this.reporteVentas = null;
+      return;
+    }
+
+    if (this.fechaDesdeReporte > this.fechaHastaReporte) {
+      this.errorReporte =
+        'La fecha inicial no puede ser posterior a la final.';
+      this.reporteVentas = null;
+      return;
+    }
+
+    this.cargandoReporte = true;
+    this.errorReporte = '';
+    this.reporteVentas = null;
+
+    this.reporteService.obtenerReporteVentas(
+      this.fechaDesdeReporte,
+      this.fechaHastaReporte
+    ).subscribe({
+
+      next: (datos) => {
+        this.reporteVentas = datos;
+        this.cargandoReporte = false;
+        this.cdr.detectChanges();
+      },
+
+      error: (error) => {
+        console.error('Error al generar reporte:', error);
+
+        this.errorReporte =
+          'No se pudo generar el reporte de ventas.';
+
+        this.cargandoReporte = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
 
 } // FIN DE LA CLASE APP
